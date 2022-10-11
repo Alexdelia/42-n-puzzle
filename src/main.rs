@@ -2,7 +2,13 @@ mod puz;
 use puz::Puz;
 
 fn main() {
-    let p = Puz::new(3);
+    let mut p = Puz::new(3);
+
+    p.print();
+
+    println!("Solving...");
+    p.solve();
+    println!("Done!");
 
     p.print();
 }

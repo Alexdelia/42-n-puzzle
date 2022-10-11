@@ -5,8 +5,8 @@ pub fn get_target_snake(size: Size) -> Vec<Token> {
     let mut target: Vec<Token> = vec![0; size.pow(2) as usize];
     let mut x: Size = 0;
     let mut y: Size = 0;
-    let mut i: Token = 1;
     let mut dir: Move = Move::Right;
+    let mut i: Token = 1;
 
     while i < size.pow(2).into() {
         target[(x * size + y) as usize] = i;

@@ -1,9 +1,12 @@
 use super::Puz;
 
+use crate::puz::r#move::Move;
+use crate::puz::{Size, Token};
+
 impl Puz {
     pub fn solve(&mut self) {}
 
-    fn get_manathan_distance(&self) -> u32 {
+    fn manathan_distance(&self) -> u32 {
         let mut distance = 0;
 
         for i in 0..self._size.pow(2) {
@@ -26,5 +29,31 @@ impl Puz {
                 + (y as i32 - target_y as i32).abs() as u32;
         }
         return distance;
+    }
+
+    fn is_solvable(&self) -> bool {
+        let mut inversions = 0;
+        let mut blank_row = 0;
+
+        for i in 0..self._size.pow(2) {
+            if self._board[i as usize] == 0 {
+                blank_row = i / self._size;
+                continue;
+            }
+            for j in i..self._size.pow(2) {
+                if self._board[j as usize] == 0 {
+                    continue;
+                }
+                if self._board[i as usize] > self._board[j as usize] {
+                    inversions += 1;
+                }
+            }
+        }
+
+        if self._size % 2 == 1 {
+            return inversions % 2 == 0;
+        } else {
+            return (inversions + blank_row) % 2 == 1;
+        }
     }
 }

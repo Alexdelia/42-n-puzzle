@@ -13,7 +13,6 @@ pub struct Puz {
     _size: Size,
     _board: Vec<Token>,
     _target: Vec<Token>,
-    _move_needed: u32,
     _solvable: bool,
     _solution: Vec<r#move::Move>,
 }
@@ -25,8 +24,7 @@ impl Puz {
             // will need to generate a random permutation of 1..size^2
             _board: (0..size.pow(2) as Token).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
             _target: target_type::get_target_snake(size),
-            _move_needed: 0,
-            _solvable: true,
+            _solvable: true, // will need to decide if use is_solvable()
             _solution: Vec::new(),
         }
     }

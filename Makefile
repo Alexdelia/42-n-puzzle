@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/30 19:21:49 by adelille          #+#    #+#              #
-#    Updated: 2022/10/11 14:43:45 by adelille         ###   ########.fr        #
+#    Updated: 2022/10/11 21:02:34 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,12 @@ all:		$(NAME)
 $(NAME):
 	$(CC) build
 	@cp target/debug/$(NAME) .
+
+run:		$(NAME)
+	$(CC) run
+
+check:
+	$(CC) check
 	
 clean:
 	$(CC) clean
@@ -40,6 +46,6 @@ fclean:		clean
 
 re:			fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re run check
 
 # **************************************************************************** #

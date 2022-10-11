@@ -1,26 +1,37 @@
 /*use rand::seq::SliceRandom;
 use rand::thread_rng;*/
 
+mod graphic;
+mod r#move;
+mod solve;
+mod target_type;
+
+type Token = u16;
+type Size = u8;
+
 pub struct Puz {
-    _size: u8,
-    _board: Vec<u8>,
+    _size: Size,
+    _board: Vec<Token>,
+    _target: Vec<Token>,
+    _move_needed: u32,
+    _solvable: bool,
+    _solution: Vec<r#move::Move>,
 }
 
 impl Puz {
-    pub fn new(size: u8) -> Puz {
+    pub fn new(size: Size) -> Puz {
         Puz {
             _size: size,
             // will need to generate a random permutation of 1..size^2
-            _board: (0..size.pow(2)).collect::<Vec<u8>>(), //.shuffle(&mut thread_rng()),
+            _board: (0..size.pow(2) as Token).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
+            _target: target_type::get_target_snake(size),
+            _move_needed: 0,
+            _solvable: true,
+            _solution: Vec::new(),
         }
     }
 
-    pub fn print(&self) {
-        for x in 0..self._size {
-            for y in 0..self._size {
-                print!("{} ", self._board[(x * self._size + y) as usize]);
-            }
-            println!("");
-        }
+    pub fn set_target(&mut self, target: Vec<Token>) {
+        self._target = target;
     }
 }

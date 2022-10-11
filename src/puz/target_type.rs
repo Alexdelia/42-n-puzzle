@@ -49,7 +49,7 @@ pub fn get_target_snake(size: Size) -> Vec<Token> {
 
     // debug
     println!("Target:");
-    crate::puz::Puz::print_other(target.clone(), size);
+    crate::puz::Puz::print_other(&target, size);
     println!();
 
     return target;

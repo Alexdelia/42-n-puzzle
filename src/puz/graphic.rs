@@ -11,7 +11,7 @@ impl Puz {
         }
     }
 
-    pub fn print_other(board: Vec<Token>, size: Size) {
+    pub fn print_other(board: &Vec<Token>, size: Size) {
         for x in 0..size {
             for y in 0..size {
                 print!("{} ", board[(x * size + y) as usize]);

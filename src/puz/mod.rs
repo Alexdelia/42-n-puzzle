@@ -3,6 +3,7 @@ use rand::thread_rng;*/
 
 mod graphic;
 mod r#move;
+mod read;
 mod solve;
 mod target_type;
 
@@ -27,6 +28,20 @@ impl Puz {
             _solvable: true, // will need to decide if use is_solvable()
             _solution: Vec::new(),
         }
+    }
+
+    pub fn from(file: String) -> Puz {
+        let mut p = Puz {
+            _size: 0,
+            _board: Vec::new(),
+            _target: Vec::new(),
+            _solvable: true,
+            _solution: Vec::new(),
+        };
+
+        p.read(file);
+
+        return p;
     }
 
     pub fn set_target(&mut self, target: Vec<Token>) {

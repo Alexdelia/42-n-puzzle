@@ -35,16 +35,16 @@ impl Puz {
         let mut inversions = 0;
         let mut blank_row = 0;
 
-        for i in 0..self._size.pow(2) {
-            if self._board[i as usize] == 0 {
-                blank_row = i / self._size;
+        for x in 0..self._size.pow(2) {
+            if self._board[x as usize] == 0 {
+                blank_row = x / self._size;
                 continue;
             }
-            for j in i..self._size.pow(2) {
-                if self._board[j as usize] == 0 {
+            for y in x..self._size.pow(2) {
+                if self._board[y as usize] == 0 {
                     continue;
                 }
-                if self._board[i as usize] > self._board[j as usize] {
+                if self._board[x as usize] > self._board[y as usize] {
                     inversions += 1;
                 }
             }

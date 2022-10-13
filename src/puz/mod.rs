@@ -30,18 +30,14 @@ impl Puz {
         }
     }
 
-    pub fn from(file: String) -> Puz {
-        let mut p = Puz {
+    pub fn new_empty() -> Puz {
+        Puz {
             _size: 0,
             _board: Vec::new(),
             _target: Vec::new(),
             _solvable: true,
             _solution: Vec::new(),
-        };
-
-        p.read(file);
-
-        return p;
+        }
     }
 
     pub fn set_target(&mut self, target: Vec<Token>) {

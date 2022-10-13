@@ -2,18 +2,21 @@ mod puz;
 mod utils;
 
 use puz::Puz;
-use std::env::args;
+use std::{env::args, process::ExitCode};
 
-fn main() {
+fn main() -> ExitCode {
+    let mut p: Puz;
     let av = args().collect::<Vec<String>>();
     dbg!(av.clone());
 
     if av.len() > 1 {
-        let mut p = Puz::from(av[1].clone());
-        return ();
+        p = Puz::new_empty();
+        if !p.read(&av[1]) {
+            return ExitCode::FAILURE;
+        }
+    } else {
+        p = Puz::new(3);
     }
-
-    let mut p = Puz::new(3);
 
     p.print();
 
@@ -22,4 +25,6 @@ fn main() {
     println!("Done!");
 
     p.print();
+
+    return ExitCode::SUCCESS;
 }

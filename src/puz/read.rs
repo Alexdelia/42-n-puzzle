@@ -47,18 +47,9 @@ impl Puz {
     }
 
     fn _read_size(&mut self, line: &String) -> bool {
-        self._size = match line.parse::<Size>() {
-            Ok(s) => s,
-            Err(e) => {
-                err!(
-                    "{e}\n\t\"{M}{line}{C}{B}\"",
-                    e = e,
-                    line = line,
-                    C = color::CLEAR,
-                    B = color::BOLD,
-                    M = color::MAG
-                );
-            }
+        self._size = match ft_parse::<Size>(line) {
+            Ok(n) => n,
+            Err(_) => return false,
         };
         if self._size < 2 {
             err!(
@@ -81,8 +72,9 @@ impl Puz {
     // 7 8 9
     fn _read_grid(&mut self, f: &Vec<String>, mut i: usize) -> bool {
         let mut n_extend: usize = 0;
-        while i < f.len() && n_extend < self._size as usize {
+        while i < f.len() && n_extend <= self._size as usize {
             let line = f[i].clone();
+
             if line.starts_with('#') {
                 i += 1;
                 continue;
@@ -100,7 +92,7 @@ impl Puz {
 
             if nums.len() != self._size.into() {
                 err!("expected {G}{s}{C} {B}numbers on line {M}{i}{C}{B}, got {R}{n}{C}\n\t{B}\"{M}{line}{C}{B}\"",
-					s=self._size, i=i, n=nums.len(), line=line,
+					s=self._size, i=i + 1, n=nums.len(), line=line,
 					C=color::CLEAR, B=color::BOLD, G=color::GRE, R=color::RED, M=color::MAG);
             }
 
@@ -110,7 +102,7 @@ impl Puz {
             i += 1;
         }
 
-        if n_extend != (self._size - 1) as usize {
+        if n_extend != self._size as usize {
             err!(
                 "expected {G}{s}{C} {B}lines, got {R}{n}",
                 s = self._size,

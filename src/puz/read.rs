@@ -37,7 +37,7 @@ impl Puz {
     }
 
     fn _read_skip(f: &Vec<String>, i: &mut usize) -> bool {
-        while *i < f.len() && f[*i].starts_with('#') && f[*i].len() > 0 {
+        while *i < f.len() && f[*i].trim().starts_with('#') && f[*i].trim().len() > 0 {
             *i += 1;
         }
         if *i == f.len() {
@@ -47,7 +47,8 @@ impl Puz {
     }
 
     fn _read_size(&mut self, line: &String) -> bool {
-        self._size = match ft_parse::<Size>(line) {
+        let s = line.splitn(2, '#').next().unwrap().trim().to_string();
+        self._size = match ft_parse::<Size>(&s) {
             Ok(n) => n,
             Err(_) => return false,
         };
@@ -80,7 +81,7 @@ impl Puz {
                 continue;
             }
 
-            let s = line.splitn(2, '#').next().unwrap().to_string();
+            let s = line.splitn(2, '#').next().unwrap().trim().to_string();
 
             let mut nums: Vec<Token> = Vec::new();
             for n in s.split_whitespace() {
@@ -90,14 +91,26 @@ impl Puz {
                 }
             }
 
-            if nums.len() != self._size.into() {
-                err!("expected {G}{s}{C} {B}numbers on line {M}{i}{C}{B}, got {R}{n}{C}\n\t{B}\"{M}{line}{C}{B}\"",
-					s=self._size, i=i + 1, n=nums.len(), line=line,
-					C=color::CLEAR, B=color::BOLD, G=color::GRE, R=color::RED, M=color::MAG);
-            }
+            if n_extend == self._size as usize {
+                if nums.len() > 0 {
+                    err!(
+                        "expected end of file, got \"{R}{l}{C}{B}\"",
+                        l = line,
+                        C = color::CLEAR,
+                        B = color::BOLD,
+                        R = color::RED
+                    );
+                }
+            } else {
+                if nums.len() != self._size.into() {
+                    err!("expected {G}{s}{C} {B}numbers on line {M}{i}{C}{B}, got {R}{n}{C}\n\t{B}\"{M}{line}{C}{B}\"",
+					s = self._size, i = i + 1, n = nums.len(), line = line,
+					C = color::CLEAR, B = color::BOLD, G = color::GRE, R = color::RED, M = color::MAG);
+                }
 
-            self._board.extend(nums);
-            n_extend += 1;
+                self._board.extend(nums);
+                n_extend += 1;
+            }
 
             i += 1;
         }

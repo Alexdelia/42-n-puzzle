@@ -1,5 +1,7 @@
-pub const BOLD: &'static str = "\x1b[1m";
 pub const CLEAR: &'static str = "\x1b[0m";
+
+pub const BOLD: &'static str = "\x1b[1m";
+pub const ITALIC: &'static str = "\x1b[3m";
 
 pub const RED: &'static str = "\x1b[31m";
 pub const GRE: &'static str = "\x1b[32m";

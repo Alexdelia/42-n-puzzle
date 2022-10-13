@@ -1,6 +1,7 @@
 use super::{Puz, Size, Token};
 use crate::color;
 use crate::err;
+use crate::utils::ft_parse;
 use std::fs::File;
 use std::io::{BufRead, BufReader, ErrorKind};
 
@@ -91,19 +92,10 @@ impl Puz {
 
             let mut nums: Vec<Token> = Vec::new();
             for n in s.split_whitespace() {
-                nums.push(match n.parse::<Token>() {
-                    Ok(n) => n,
-                    Err(e) => {
-                        err!(
-                            "{e}\n\t\"{M}{line}{C}{B}\"",
-                            e = e,
-                            line = line,
-                            C = color::CLEAR,
-                            B = color::BOLD,
-                            M = color::MAG
-                        );
-                    }
-                });
+                match ft_parse::<Token>(n) {
+                    Ok(n) => nums.push(n),
+                    Err(_) => return false,
+                }
             }
 
             if nums.len() != self._size.into() {

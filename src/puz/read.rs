@@ -19,12 +19,42 @@ impl Puz {
             },
         };
 
-        let r = BufReader::new(f);
+        let f = BufReader::new(f);
+        let f: Vec<String> = f.lines().map(|l| l.unwrap()).collect();
+        let mut i: usize = 0;
 
-        for l in r.lines() {
-            let line = l.unwrap();
+        if !Self::_read_skip(&f, &mut i) {
+			return false;
+		}
+        if !self._read_size(&f[i]) {
+            return false;
         }
 
         return true;
     }
+
+    fn _read_skip(f: &Vec<String>, i: &mut usize) -> bool {
+        while *i < f.len() && f[*i].starts_with('#') && f[*i].len() > 0 {
+            *i += 1;
+        }
+		if *i == f.len() {
+			err!("unexpected end of file");
+			return false;
+		}
+		return true;
+    }
+
+    fn _read_size(&mut self, line: &String) -> bool {
+        self._size = match line.parse::<super::Size>() {
+            Ok(s) => s,
+            Err(e) => {
+                err!("{}\n\t\x1b[1m{}\x1b[0m", e, line);
+                return false;
+            }
+        };
+        println!("size: {}", self._size);
+        return true;
+    }
+
+	fn _read_initial_state(&mut self, f: &Vec<String>, i: &mut usize) 
 }

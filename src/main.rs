@@ -14,6 +14,7 @@ fn main() -> ExitCode {
         if !p.read(&av[1]) {
             return ExitCode::FAILURE;
         }
+        p.set_target(puz::target_type::get_target_snake(p.get_size()));
     } else {
         p = Puz::new(3);
     }

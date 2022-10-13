@@ -5,7 +5,7 @@ mod graphic;
 mod r#move;
 mod read;
 mod solve;
-mod target_type;
+pub mod target_type;
 
 type Token = u16;
 type Size = u8;
@@ -42,5 +42,9 @@ impl Puz {
 
     pub fn set_target(&mut self, target: Vec<Token>) {
         self._target = target;
+    }
+
+    pub fn get_size(&self) -> Size {
+        self._size
     }
 }

@@ -1,5 +1,5 @@
 use super::Puz;
-use crate::puz::{Size, Token};
+use super::{Size, Token};
 
 impl Puz {
     pub fn print(&self) {

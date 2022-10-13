@@ -1,7 +1,7 @@
 use super::Puz;
 
-use crate::puz::r#move::Move;
-use crate::puz::{Size, Token};
+use super::r#move::Move;
+use super::{Size, Token};
 
 impl Puz {
     pub fn solve(&mut self) {}

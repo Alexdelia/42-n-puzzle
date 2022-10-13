@@ -67,35 +67,27 @@ impl Puz {
     }
 
     // need to read an initial state of format:
-    // 1 2 3#comment
+    // 1 2 3 # comment
     // 4  5 6
     // #another comment
     // 7 8 9
     fn _read_grid(&mut self, f: &Vec<String>, mut i: usize) -> bool {
         let mut n_extend: usize = 0;
         while i < f.len() && n_extend <= self._size as usize {
-            let line = f[i].clone();
+            let line = f[i].splitn(2, '#').next().unwrap().trim().to_string();
 
-            if line.starts_with('#') {
+            if f[i].starts_with('#') || line.len() == 0 {
                 i += 1;
                 continue;
             }
 
-            let s = line.splitn(2, '#').next().unwrap().trim().to_string();
-
-            let mut nums: Vec<Token> = Vec::new();
-            for n in s.split_whitespace() {
-                match ft_parse::<Token>(n) {
-                    Ok(n) => nums.push(n),
-                    Err(_) => return false,
-                }
-            }
+            let nums = self._parse_line(&line, i);
 
             if n_extend == self._size as usize {
                 if nums.len() > 0 {
                     err!(
-                        "expected end of file, got \"{R}{l}{C}{B}\"",
-                        l = line,
+                        "expected no more value, got \"{R}{l}{C}{B}\"",
+                        l = f[i],
                         C = color::CLEAR,
                         B = color::BOLD,
                         R = color::RED
@@ -104,7 +96,7 @@ impl Puz {
             } else {
                 if nums.len() != self._size.into() {
                     err!("expected {G}{s}{C} {B}numbers on line {M}{i}{C}{B}, got {R}{n}{C}\n\t{B}\"{M}{line}{C}{B}\"",
-					s = self._size, i = i + 1, n = nums.len(), line = line,
+					s = self._size, i = i + 1, n = nums.len(), line = f[i],
 					C = color::CLEAR, B = color::BOLD, G = color::GRE, R = color::RED, M = color::MAG);
                 }
 
@@ -128,5 +120,31 @@ impl Puz {
         }
 
         return true;
+    }
+
+    fn _parse_line(&self, line: &String, i: usize) -> Vec<Token> {
+        let mut nums: Vec<Token> = Vec::new();
+        for n in line.split_whitespace() {
+            match ft_parse::<Token>(n) {
+                Ok(n) => match self._board.contains(&n) {
+                    true => {
+                        err!(
+                            "duplicate {R}{n}{C}\t{B}{I}(second on line {C}{B}{M}{l}{C}{B})",
+                            n = n,
+                            l = i + 1,
+                            C = color::CLEAR,
+                            B = color::BOLD,
+                            I = color::ITALIC,
+                            R = color::RED,
+                            M = color::MAG
+                        );
+                    }
+                    // TODO: check if n is in range
+                    false => nums.push(n),
+                },
+                Err(_) => return false,
+            }
+        }
+        return nums;
     }
 }

@@ -143,8 +143,25 @@ impl Puz {
                         );
                         return Err(false);
                     }
-                    // TODO: check if n is in range
-                    false => nums.push(n),
+                    false => match n < self._size.pow(2).into() {
+                        false => {
+                            err_no!(
+								"expected {G}0{C} {B}<= {I}n{C} {B}<= {G}{s}{C}{B}, got {R}{n}{C}\n\t{B}\"{M}{l}{C}{B}\"\t{I}(line {C}{B}{M}{i}{C}{B}{I})",
+								n = n,
+								s = self._size.pow(2) - 1,
+								l = line,
+								i = i + 1,
+								C = color::CLEAR,
+								B = color::BOLD,
+								I = color::ITALIC,
+								G = color::GRE,
+								R = color::RED,
+								M = color::MAG
+							);
+                            return Err(false);
+                        }
+                        true => nums.push(n),
+                    },
                 },
                 Err(_) => return Err(false),
             }

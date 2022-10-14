@@ -29,7 +29,7 @@ impl Puz {
                     sol_len = cur.sol_len;
                     println!("\nfound solution: {} {:?}", sol_len, found_solution);
                     // need to decide over this return
-                    return found_solution;
+                    //return found_solution;
                 }
                 continue;
             }

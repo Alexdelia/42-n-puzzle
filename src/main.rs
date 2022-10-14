@@ -46,11 +46,11 @@ fn main() -> ExitCode {
 
     println!("Solving...");
     let now = SystemTime::now();
-    p.solve();
+    let solution = p.solve();
     println!("{:?}", now.elapsed().unwrap());
     println!("Done!");
 
-    p.print();
+    println!("Solution: {:?}", solution);
 
     return ExitCode::SUCCESS;
 }

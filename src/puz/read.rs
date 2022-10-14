@@ -143,12 +143,12 @@ impl Puz {
                         );
                         return Err(false);
                     }
-                    false => match n < self._size.pow(2).into() {
+                    false => match n < (self._size as Token).pow(2) {
                         false => {
                             err_no!(
 								"expected {G}0{C} {B}<= {I}n{C} {B}<= {G}{s}{C}{B}, got {R}{n}{C}\n\t{B}\"{M}{l}{C}{B}\"\t{I}(line {C}{B}{M}{i}{C}{B}{I})",
 								n = n,
-								s = self._size.pow(2) - 1,
+								s = (self._size as Token).pow(2) - 1,
 								l = line,
 								i = i + 1,
 								C = color::CLEAR,

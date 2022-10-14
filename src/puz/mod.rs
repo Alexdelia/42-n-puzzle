@@ -33,7 +33,7 @@ impl Puz {
         Puz {
             _size: size,
             // will need to generate a random permutation of 1..size^2
-            _board: (0..size.pow(2) as Token).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
+            _board: (0..(size as Token).pow(2)).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
             _target: target_type::get_target_snake(size),
             _solvable: true, // will need to decide if use is_solvable()
             _solution: Vec::new(),

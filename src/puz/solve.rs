@@ -3,10 +3,11 @@ use super::r#move::{AllowedMove, Move};
 use super::{Puz, Size, Token};
 
 impl Puz {
-    pub fn solve(&self) {
+    pub fn solve(&self) -> Vec<Move> {
         let mut open: Vec<Board> = Vec::new();
         let mut closed: Vec<Vec<Token>> = Vec::new();
         let mut found_solution: Vec<Move> = Vec::new();
+        let mut sol_len: usize = 0;
         let mut current: usize;
         let mut allowed_move: [AllowedMove; 4] = AllowedMove::new_array();
 
@@ -20,15 +21,16 @@ impl Puz {
         while open.len() > 0 {
             current = Self::_min_distance_index(&open);
             if open[current].board == self._target {
-                if found_solution.len() == 0 || open[current].solution.len() < found_solution.len()
-                {
+                if sol_len == 0 || open[current].solution.len() < sol_len {
                     found_solution = open[current].solution.clone();
-                    println!(
-                        "found solution: {} {:?}",
-                        found_solution.len(),
-                        found_solution
-                    );
+                    sol_len = found_solution.len();
+                    println!("found solution: {} {:?}", sol_len, found_solution);
                 }
+                open.remove(current);
+                continue;
+            }
+            if sol_len > 0 && open[current].solution.len() >= sol_len {
+                closed.push(open[current].board.clone());
                 open.remove(current);
                 continue;
             }
@@ -36,6 +38,7 @@ impl Puz {
                 open.remove(current);
                 continue;
             }
+
             Move::update_allowed_move(&mut allowed_move, open[current].blank, self._size);
             for m in allowed_move.iter() {
                 if m.a {
@@ -47,8 +50,12 @@ impl Puz {
                     }
                 }
             }
+
             closed.push(open[current].board.clone());
+            open.remove(current);
         }
+
+        return found_solution;
     }
 
     fn _min_distance_index(open: &Vec<Board>) -> usize {

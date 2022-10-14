@@ -1,4 +1,5 @@
-use super::{Board, Puz, Size, Token};
+use super::board::Board;
+use super::{Puz, Size, Token};
 
 #[derive(Copy, Clone)]
 pub enum Move {

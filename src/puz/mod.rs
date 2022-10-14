@@ -1,6 +1,7 @@
 /*use rand::seq::SliceRandom;
 use rand::thread_rng;*/
 
+mod board;
 mod graphic;
 mod r#move;
 mod read;
@@ -16,11 +17,6 @@ pub struct Puz {
     _solution: Vec<r#move::Move>,
     _blank: Token,
     _target: Vec<Token>,
-}
-
-pub struct Board {
-    _board: Vec<Token>,
-    _blank: Token,
 }
 
 impl Puz {

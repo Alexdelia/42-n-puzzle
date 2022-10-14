@@ -1,10 +1,11 @@
+use super::board::Board;
 use super::r#move::{AllowedMove, Move};
-use super::{Board, Puz, Size, Token};
+use super::{Puz, Size, Token};
 
 impl Puz {
     pub fn solve(&self) {
         let mut open: Vec<Board> = Vec::new();
-        let mut closed: Vec<Board> = Vec::new();
+        let mut closed: Vec<Vec<Token>> = Vec::new();
     }
 
     pub fn manathan_distance(&self, target: &[Token]) -> u32 {

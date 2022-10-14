@@ -1,15 +1,28 @@
 use super::board::Board;
 use super::{Puz, Size, Token};
 
-#[derive(Copy, Clone)]
+// might remove Debug
+#[derive(Copy, Clone, Debug)]
 pub enum Move {
     Up = 0,
     Down = 1,
     Left = 2,
     Right = 3,
 }
+pub struct AllowedMove {
+    pub m: Move,
+    pub a: bool,
+}
 
 impl Move {
+    pub fn update_allowed_move(m: &mut [AllowedMove; 4], blank: Token, size: Size) {
+        let (x, y) = Puz::get_xy(blank, size);
+        m[Move::Up as usize].a = y > 0;
+        m[Move::Down as usize].a = y < size - 1;
+        m[Move::Left as usize].a = x > 0;
+        m[Move::Right as usize].a = x < size - 1;
+    }
+
     pub fn get_opposite(m: Move) -> Move {
         match m {
             Move::Up => Move::Down,
@@ -18,11 +31,6 @@ impl Move {
             Move::Right => Move::Left,
         }
     }
-}
-
-pub struct AllowedMove {
-    pub m: Move,
-    pub a: bool,
 }
 
 impl AllowedMove {
@@ -65,36 +73,9 @@ impl AllowedMove {
     }
 }
 
-impl Puz {
-    // pub fn play_move(&mut self, m: Move) {
-    //     let (x, y) = self.get_blank_xy();
-    //     let mut new_x = x;
-    //     let mut new_y = y;
-    //     match m {
-    //         Move::Up => new_y -= 1,
-    //         Move::Down => new_y += 1,
-    //         Move::Left => new_x -= 1,
-    //         Move::Right => new_x += 1,
-    //     }
-    //     self._board.swap(
-    //         (x + y * self._size) as usize,
-    //         (new_x + new_y * self._size) as usize,
-    //     );
-    //     self._blank = new_x as Token + new_y as Token * self._size as Token;
-    // }
-
-    pub fn update_allowed_move(&self, m: &mut [AllowedMove; 4]) {
-        let (x, y) = self.get_blank_xy();
-        m[Move::Up as usize].a = y > 0;
-        m[Move::Down as usize].a = y < self._size - 1;
-        m[Move::Left as usize].a = x > 0;
-        m[Move::Right as usize].a = x < self._size - 1;
-    }
-}
-
 impl Board {
-    pub fn play_move(board: &Board, size: Size, m: Move) -> Board {
-        let (x, y) = Puz::get_xy(board._blank, size);
+    pub fn play_move(&self, size: Size, m: Move) -> Board {
+        let (x, y) = Puz::get_xy(self.blank, size);
         let mut new_x = x;
         let mut new_y = y;
         match m {
@@ -103,11 +84,16 @@ impl Board {
             Move::Left => new_x -= 1,
             Move::Right => new_x += 1,
         }
-        let mut new_board = board._board.clone();
-        new_board.swap((x + y * size) as usize, (new_x + new_y * size) as usize);
-        return Board {
-            _board: new_board,
-            _blank: new_x as Token + new_y as Token * size as Token,
+        let mut new_board = Board {
+            board: self.board.clone(),
+            blank: new_x as Token + new_y as Token * size as Token,
+            distance: 0,
+            solution: self.solution.clone(),
         };
+        new_board
+            .board
+            .swap((x + y * size) as usize, (new_x + new_y * size) as usize);
+        new_board.solution.push(m);
+        return new_board;
     }
 }

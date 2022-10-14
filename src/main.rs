@@ -2,6 +2,7 @@ mod color;
 mod puz;
 mod utils;
 
+use puz::target_type::get_target_snake;
 use puz::Puz;
 use std::{env::args, process::ExitCode};
 
@@ -11,13 +12,13 @@ fn main() -> ExitCode {
     dbg!(av.clone());
 
     if av.len() > 1 {
-        p = Puz::new_empty();
+        p = Puz::new();
         if !p.read(&av[1]) {
             return ExitCode::FAILURE;
         }
-        p.set_target(puz::target_type::get_target_snake(p.get_size()));
+        p.set_target(get_target_snake(p.get_size()));
     } else {
-        p = Puz::new(3);
+        p = Puz::from(3);
     }
 
     p.print();

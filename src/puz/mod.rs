@@ -19,23 +19,23 @@ pub struct Puz {
 }
 
 impl Puz {
-    pub fn new(size: Size) -> Puz {
+    pub fn new() -> Puz {
+        Puz {
+            _size: 0,
+            _board: Vec::new(),
+            _target: Vec::new(),
+            _solvable: true,
+            _solution: Vec::new(),
+        }
+    }
+
+    pub fn from(size: Size) -> Puz {
         Puz {
             _size: size,
             // will need to generate a random permutation of 1..size^2
             _board: (0..size.pow(2) as Token).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
             _target: target_type::get_target_snake(size),
             _solvable: true, // will need to decide if use is_solvable()
-            _solution: Vec::new(),
-        }
-    }
-
-    pub fn new_empty() -> Puz {
-        Puz {
-            _size: 0,
-            _board: Vec::new(),
-            _target: Vec::new(),
-            _solvable: true,
             _solution: Vec::new(),
         }
     }

@@ -1,7 +1,7 @@
 use super::{Puz, Size, Token};
 use crate::color;
-use crate::err;
 use crate::utils::ft_parse;
+use crate::{err, err_no};
 use std::fs::File;
 use std::io::{BufRead, BufReader, ErrorKind};
 
@@ -81,7 +81,10 @@ impl Puz {
                 continue;
             }
 
-            let nums = self._parse_line(&line, i);
+            let nums = match self._parse_line(&line, i) {
+                Ok(n) => n,
+                Err(_) => return false,
+            };
 
             if n_extend == self._size as usize {
                 if nums.len() > 0 {
@@ -122,13 +125,13 @@ impl Puz {
         return true;
     }
 
-    fn _parse_line(&self, line: &String, i: usize) -> Vec<Token> {
+    fn _parse_line(&self, line: &String, i: usize) -> Result<Vec<Token>, bool> {
         let mut nums: Vec<Token> = Vec::new();
         for n in line.split_whitespace() {
             match ft_parse::<Token>(n) {
                 Ok(n) => match self._board.contains(&n) {
                     true => {
-                        err!(
+                        err_no!(
                             "duplicate {R}{n}{C}\t{B}{I}(second on line {C}{B}{M}{l}{C}{B})",
                             n = n,
                             l = i + 1,
@@ -138,13 +141,14 @@ impl Puz {
                             R = color::RED,
                             M = color::MAG
                         );
+                        return Err(false);
                     }
                     // TODO: check if n is in range
                     false => nums.push(n),
                 },
-                Err(_) => return false,
+                Err(_) => return Err(false),
             }
         }
-        return nums;
+        return Ok(nums);
     }
 }

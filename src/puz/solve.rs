@@ -1,4 +1,5 @@
 use super::board::Board;
+use super::heuristic::manathan_distance;
 use super::r#move::{AllowedMove, Move};
 use super::{Puz, Size, Token};
 
@@ -13,23 +14,24 @@ impl Puz {
 
         open.push(Board {
             board: self._board.clone(),
-            blank: self._blank,
-            distance: 0,
+            blank: Board::get_blank_index(&self._board),
+            score: 0,
             solution: Vec::new(),
+            sol_len: 0,
         });
 
-        while open.len() > 0 {
-            current = Self::_min_distance_index(&open);
+        while open.is_empty() == false {
+            current = Self::_min_score_index(&open);
             if open[current].board == self._target {
-                if sol_len == 0 || open[current].solution.len() < sol_len {
+                if sol_len == 0 || open[current].sol_len < sol_len {
                     found_solution = open[current].solution.clone();
-                    sol_len = found_solution.len();
-                    println!("found solution: {} {:?}", sol_len, found_solution);
+                    sol_len = open[current].sol_len;
+                    println!("\nfound solution: {} {:?}", sol_len, found_solution);
                 }
                 open.remove(current);
                 continue;
             }
-            if sol_len > 0 && open[current].solution.len() >= sol_len {
+            if sol_len > 0 && open[current].sol_len >= sol_len {
                 closed.push(open[current].board.clone());
                 open.remove(current);
                 continue;
@@ -44,8 +46,8 @@ impl Puz {
                 if m.a {
                     let mut new_board = open[current].play_move(self._size, m.m);
                     if !closed.contains(&new_board.board) {
-                        new_board.distance =
-                            Self::manathan_distance(&new_board.board, self._size, &self._target);
+                        new_board.score = new_board.sol_len as u32
+                            + manathan_distance(&new_board.board, self._size, &self._target);
                         open.push(new_board);
                     }
                 }
@@ -53,47 +55,23 @@ impl Puz {
 
             closed.push(open[current].board.clone());
             open.remove(current);
+
+            print!("\ropen: {}\tclosed: {}", open.len(), closed.len());
         }
 
         return found_solution;
     }
 
-    fn _min_distance_index(open: &Vec<Board>) -> usize {
-        let mut min_distance = open[0].distance;
+    fn _min_score_index(open: &Vec<Board>) -> usize {
+        let mut min_score = open[0].score;
         let mut min_index = 0;
         for i in 1..open.len() {
-            if open[i].distance < min_distance {
-                min_distance = open[i].distance;
+            if open[i].score < min_score {
+                min_score = open[i].score;
                 min_index = i;
             }
         }
         return min_index;
-    }
-
-    pub fn manathan_distance(board: &[Token], size: Size, target: &[Token]) -> u32 {
-        let size: Token = size as Token;
-        let mut distance = 0;
-
-        for i in 0..size.pow(2) {
-            let mut x = 0;
-            let mut y = 0;
-            let mut target_x = 0;
-            let mut target_y = 0;
-
-            for f in 0..size.pow(2) {
-                if board[f as usize] == i.into() {
-                    x = f % size;
-                    y = f / size;
-                }
-                if target[f as usize] == i.into() {
-                    target_x = f % size;
-                    target_y = f / size;
-                }
-            }
-            distance += (x as i32 - target_x as i32).abs() as u32
-                + (y as i32 - target_y as i32).abs() as u32;
-        }
-        return distance;
     }
 
     pub fn is_solvable(&self) -> bool {

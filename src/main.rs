@@ -30,16 +30,17 @@ fn main() -> ExitCode {
         Err(_) => return ExitCode::FAILURE,
     };
 
-    if !p.is_solvable() {
-        p.print();
-        println!(
-            "{B}initial state is {Y}not{C} {B}solvable{C}",
-            C = color::CLEAR,
-            B = color::BOLD,
-            Y = color::YEL
-        );
-        return ExitCode::FAILURE;
-    }
+    // to fix is_solvable
+    // if !p.is_solvable() {
+    //     p.print();
+    //     println!(
+    //         "{B}initial state is {Y}not{C} {B}solvable{C}",
+    //         C = color::CLEAR,
+    //         B = color::BOLD,
+    //         Y = color::YEL
+    //     );
+    //     return ExitCode::FAILURE;
+    // }
 
     p.print();
 

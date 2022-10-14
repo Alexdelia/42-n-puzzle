@@ -87,8 +87,9 @@ impl Board {
         let mut new_board = Board {
             board: self.board.clone(),
             blank: new_x as Token + new_y as Token * size as Token,
-            distance: 0,
+            score: 0,
             solution: self.solution.clone(),
+            sol_len: self.sol_len + 1,
         };
         new_board
             .board

@@ -3,6 +3,7 @@ use rand::thread_rng;*/
 
 mod board;
 mod graphic;
+mod heuristic;
 mod r#move;
 mod read;
 mod solve;
@@ -14,8 +15,6 @@ type Size = u8;
 pub struct Puz {
     _size: Size,
     _board: Vec<Token>,
-    _solution: Vec<r#move::Move>,
-    _blank: Token,
     _target: Vec<Token>,
 }
 
@@ -24,8 +23,6 @@ impl Puz {
         Puz {
             _size: 0,
             _board: Vec::new(),
-            _solution: Vec::new(),
-            _blank: 0,
             _target: Vec::new(),
         }
     }
@@ -35,21 +32,9 @@ impl Puz {
             _size: size,
             // will need to generate a random permutation of 1..size^2
             _board: (0..(size as Token).pow(2)).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
-            _solution: Vec::new(),
-            _blank: 0,
             _target: Vec::new(),
         };
-        p._update_blank();
         return p;
-    }
-
-    fn _update_blank(&mut self) {
-        for i in 0..(self._size as Token).pow(2) as usize {
-            if self._board[i] == 0 {
-                self._blank = i as Token;
-                return;
-            }
-        }
     }
 
     pub fn set_target(&mut self, target: &[Token]) {

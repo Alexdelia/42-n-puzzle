@@ -33,6 +33,8 @@ impl Puz {
             return false;
         }
 
+        self._update_blank();
+
         return true;
     }
 

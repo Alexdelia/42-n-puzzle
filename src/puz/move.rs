@@ -1,15 +1,17 @@
 use super::Puz;
+use super::Token;
 
+#[derive(Copy, Clone)]
 pub enum Move {
-    Up,
-    Down,
-    Left,
-    Right,
+    Up = 0,
+    Down = 1,
+    Left = 2,
+    Right = 3,
 }
 
 impl Move {
-    pub fn get_opposite(&self) -> Move {
-        match self {
+    pub fn get_opposite(m: Move) -> Move {
+        match m {
             Move::Up => Move::Down,
             Move::Down => Move::Up,
             Move::Left => Move::Right,
@@ -18,39 +20,75 @@ impl Move {
     }
 }
 
+pub struct AllowedMove {
+    pub m: Move,
+    pub a: bool,
+}
+
+impl AllowedMove {
+    pub fn new_array() -> [AllowedMove; 4] {
+        let mut m: [AllowedMove; 4] = [
+            AllowedMove {
+                m: Move::Up,
+                a: true,
+            },
+            AllowedMove {
+                m: Move::Down,
+                a: true,
+            },
+            AllowedMove {
+                m: Move::Left,
+                a: true,
+            },
+            AllowedMove {
+                m: Move::Right,
+                a: true,
+            },
+        ];
+        m[Move::Up as usize] = AllowedMove {
+            m: Move::Up,
+            a: true,
+        };
+        m[Move::Down as usize] = AllowedMove {
+            m: Move::Down,
+            a: true,
+        };
+        m[Move::Left as usize] = AllowedMove {
+            m: Move::Left,
+            a: true,
+        };
+        m[Move::Right as usize] = AllowedMove {
+            m: Move::Right,
+            a: true,
+        };
+        return m;
+    }
+}
+
 impl Puz {
-    fn _move(&mut self, m: Move) {
-        let size = self._size as usize;
-        let blank_index = self._blank.y as usize * size + self._blank.x as usize;
+    // could optimize by removing outbound protection
+    pub fn play_move(&mut self, m: Move) {
+        let (x, y) = self.get_blank_xy();
+        let mut new_x = x;
+        let mut new_y = y;
         match m {
-            Move::Up => {
-                if self._blank.y == 0 {
-                    return;
-                }
-                self._board.swap(blank_index, blank_index - size);
-                self._blank.y -= 1;
-            }
-            Move::Down => {
-                if self._blank.y == self._size - 1 {
-                    return;
-                }
-                self._board.swap(blank_index, blank_index + size);
-                self._blank.y += 1;
-            }
-            Move::Left => {
-                if self._blank.x == 0 {
-                    return;
-                }
-                self._board.swap(blank_index, blank_index - 1);
-                self._blank.x -= 1;
-            }
-            Move::Right => {
-                if self._blank.x == self._size - 1 {
-                    return;
-                }
-                self._board.swap(blank_index, blank_index + 1);
-                self._blank.x += 1;
-            }
+            Move::Up => new_y -= 1,
+            Move::Down => new_y += 1,
+            Move::Left => new_x -= 1,
+            Move::Right => new_x += 1,
         }
+        self._board.swap(
+            (x + y * self._size) as usize,
+            (new_x + new_y * self._size) as usize,
+        );
+        self._blank = new_x as Token + new_y as Token * self._size as Token;
+    }
+
+    pub fn update_allowed_move(&self, m: &mut [AllowedMove; 4]) {
+        let (x, y) = self.get_blank_xy();
+        m[Move::Up as usize].a = y > 0;
+        m[Move::Down as usize].a = y < self._size - 1;
+        m[Move::Left as usize].a = x > 0;
+        m[Move::Right as usize].a = x < self._size - 1;
     }
 }

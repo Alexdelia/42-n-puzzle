@@ -4,7 +4,7 @@ mod utils;
 
 use puz::target_type::get_target_snake;
 use puz::Puz;
-use std::{env::args, process::ExitCode};
+use std::{env::args, process::ExitCode, time::SystemTime};
 
 fn init_board() -> Result<Puz, bool> {
     let mut p: Puz;
@@ -45,7 +45,9 @@ fn main() -> ExitCode {
     p.print();
 
     println!("Solving...");
+    let now = SystemTime::now();
     p.solve();
+    println!("{:?}", now.elapsed().unwrap());
     println!("Done!");
 
     p.print();

@@ -2,7 +2,7 @@ use super::board::Board;
 use super::{Puz, Size, Token};
 
 // might remove Debug
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Move {
     Up = 0,
     Down = 1,

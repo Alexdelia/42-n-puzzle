@@ -1,3 +1,5 @@
+use std::collections::BinaryHeap;
+
 use super::board::Board;
 use super::heuristic::manathan_distance;
 use super::r#move::{AllowedMove, Move};
@@ -5,11 +7,10 @@ use super::{Puz, Size, Token};
 
 impl Puz {
     pub fn solve(&self) -> Vec<Move> {
-        let mut open: Vec<Board> = Vec::new();
+        let mut open = BinaryHeap::<Board>::new();
         let mut closed: Vec<Vec<Token>> = Vec::new();
         let mut found_solution: Vec<Move> = Vec::new();
         let mut sol_len: usize = 0;
-        let mut current: usize;
         let mut allowed_move: [AllowedMove; 4] = AllowedMove::new_array();
 
         open.push(Board {
@@ -21,30 +22,29 @@ impl Puz {
         });
 
         while open.is_empty() == false {
-            current = Self::_min_score_index(&open);
-            if open[current].board == self._target {
-                if sol_len == 0 || open[current].sol_len < sol_len {
-                    found_solution = open[current].solution.clone();
-                    sol_len = open[current].sol_len;
+            let cur = open.pop().unwrap();
+            if cur.board == self._target {
+                if sol_len == 0 || cur.sol_len < sol_len {
+                    found_solution = cur.solution.clone();
+                    sol_len = cur.sol_len;
                     println!("\nfound solution: {} {:?}", sol_len, found_solution);
+                    // need to decide over this return
+                    return found_solution;
                 }
-                open.remove(current);
                 continue;
             }
-            if sol_len > 0 && open[current].sol_len >= sol_len {
-                closed.push(open[current].board.clone());
-                open.remove(current);
+            if sol_len > 0 && cur.sol_len >= sol_len {
+                closed.push(cur.board.clone());
                 continue;
             }
-            if closed.contains(&open[current].board) {
-                open.remove(current);
+            if closed.contains(&cur.board) {
                 continue;
             }
 
-            Move::update_allowed_move(&mut allowed_move, open[current].blank, self._size);
+            Move::update_allowed_move(&mut allowed_move, cur.blank, self._size);
             for m in allowed_move.iter() {
                 if m.a {
-                    let mut new_board = open[current].play_move(self._size, m.m);
+                    let mut new_board = cur.play_move(self._size, m.m);
                     if !closed.contains(&new_board.board) {
                         new_board.score = new_board.sol_len as u32
                             + manathan_distance(&new_board.board, self._size, &self._target);
@@ -53,8 +53,7 @@ impl Puz {
                 }
             }
 
-            closed.push(open[current].board.clone());
-            open.remove(current);
+            closed.push(cur.board.clone());
 
             print!("\ropen: {}\tclosed: {}", open.len(), closed.len());
         }

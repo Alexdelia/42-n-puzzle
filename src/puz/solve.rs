@@ -1,4 +1,4 @@
-use std::collections::BinaryHeap;
+use std::collections::{BinaryHeap, HashSet};
 
 use super::board::Board;
 use super::heuristic::manathan_distance;
@@ -8,7 +8,7 @@ use super::{Puz, Size, Token};
 impl Puz {
     pub fn solve(&self) -> Vec<Move> {
         let mut open = BinaryHeap::<Board>::new();
-        let mut closed: Vec<Vec<Token>> = Vec::new();
+        let mut closed = HashSet::<Vec<Token>>::new();
         let mut found_solution: Vec<Move> = Vec::new();
         let mut sol_len: usize = 0;
         let mut allowed_move: [AllowedMove; 4] = AllowedMove::new_array();
@@ -34,7 +34,7 @@ impl Puz {
                 continue;
             }
             if sol_len > 0 && cur.sol_len >= sol_len {
-                closed.push(cur.board.clone());
+                closed.insert(cur.board.clone());
                 continue;
             }
             if closed.contains(&cur.board) {
@@ -53,7 +53,7 @@ impl Puz {
                 }
             }
 
-            closed.push(cur.board.clone());
+            closed.insert(cur.board.clone());
 
             print!("\ropen: {}\tclosed: {}", open.len(), closed.len());
         }

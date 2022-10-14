@@ -16,10 +16,10 @@ fn init_board() -> Result<Puz, bool> {
         if !p.read(&av[1]) {
             return Err(false);
         }
-        p.set_target(get_target_snake(p.get_size()));
     } else {
         p = Puz::from(3);
     }
+    p.set_target(&get_target_snake(p.get_size()));
 
     return Ok(p);
 }

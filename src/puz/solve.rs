@@ -1,41 +1,13 @@
-use super::Puz;
-
 use super::r#move::{AllowedMove, Move};
-use super::{Size, Token};
+use super::{Board, Puz, Size, Token};
 
 impl Puz {
-    pub fn solve(&mut self) {
-        let mut m = AllowedMove::new_array();
-        let mut dist = (self._manathan_distance(), Move::Up);
-
-        while dist.0 > 0 {
-            self.update_allowed_move(&mut m);
-            dist = self._best_move(&m);
-            self.play_move(dist.1);
-            self.print();
-        }
+    pub fn solve(&self) {
+        let mut open: Vec<Board> = Vec::new();
+        let mut closed: Vec<Board> = Vec::new();
     }
 
-    fn _best_move(&mut self, m: &[AllowedMove; 4]) -> (u32, Move) {
-        let mut best = (u32::MAX, Move::Up);
-        for i in 0..4 {
-            print!("({}", i);
-            if m[i].a {
-                self.play_move(m[i].m);
-                let dist = self._manathan_distance();
-                if dist < best.0 {
-                    best = (dist, m[i].m);
-                }
-                print!(": {}", dist);
-                self.play_move(Move::get_opposite(m[i].m));
-            }
-            print!(")\t");
-        }
-        println!();
-        return best;
-    }
-
-    fn _manathan_distance(&self) -> u32 {
+    pub fn manathan_distance(&self, target: &[Token]) -> u32 {
         let size = self._size as Token;
         let mut distance = 0;
 
@@ -50,7 +22,7 @@ impl Puz {
                     x = f % size;
                     y = f / size;
                 }
-                if self._target[f as usize] == i.into() {
+                if target[f as usize] == i.into() {
                     target_x = f % size;
                     target_y = f / size;
                 }

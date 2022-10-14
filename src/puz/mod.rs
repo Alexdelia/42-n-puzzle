@@ -13,8 +13,13 @@ type Size = u8;
 pub struct Puz {
     _size: Size,
     _board: Vec<Token>,
-    _target: Vec<Token>,
     _solution: Vec<r#move::Move>,
+    _blank: Token,
+    _target: Vec<Token>,
+}
+
+pub struct Board {
+    _board: Vec<Token>,
     _blank: Token,
 }
 
@@ -23,9 +28,9 @@ impl Puz {
         Puz {
             _size: 0,
             _board: Vec::new(),
-            _target: Vec::new(),
             _solution: Vec::new(),
             _blank: 0,
+            _target: Vec::new(),
         }
     }
 
@@ -34,9 +39,9 @@ impl Puz {
             _size: size,
             // will need to generate a random permutation of 1..size^2
             _board: (0..(size as Token).pow(2)).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
-            _target: target_type::get_target_snake(size),
             _solution: Vec::new(),
             _blank: 0,
+            _target: Vec::new(),
         };
         p._update_blank();
         return p;
@@ -51,18 +56,18 @@ impl Puz {
         }
     }
 
-    pub fn set_target(&mut self, target: Vec<Token>) {
-        self._target = target;
+    pub fn set_target(&mut self, target: &[Token]) {
+        self._target = target.to_vec();
     }
 
     pub fn get_size(&self) -> Size {
         self._size
     }
 
-    pub fn get_blank_xy(&self) -> (Size, Size) {
+    pub fn get_xy(index: Token, size: Size) -> (Size, Size) {
         return (
-            (self._blank % self._size as Token) as Size,
-            (self._blank / self._size as Token) as Size,
+            (index % size as Token) as Size,
+            (index / size as Token) as Size,
         );
     }
 }

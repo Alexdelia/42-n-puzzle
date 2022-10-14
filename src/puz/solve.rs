@@ -32,7 +32,7 @@ impl Puz {
         return distance;
     }
 
-    fn is_solvable(&self) -> bool {
+    pub fn is_solvable(&self) -> bool {
         let size = self._size as Token;
         let mut inversions = 0;
         let mut blank_row = 0;
@@ -53,9 +53,9 @@ impl Puz {
         }
 
         if size % 2 == 1 {
-            return inversions % 2 == 0;
+            return inversions % 2 == 1;
         } else {
-            return (inversions + blank_row) % 2 == 1;
+            return (inversions + blank_row) % 2 == 0;
         }
     }
 }

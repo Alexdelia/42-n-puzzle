@@ -93,6 +93,10 @@ impl Puz {
         self._size
     }
 
+    pub fn get_stop(&self) -> bool {
+        self._stop_at_first_solution
+    }
+
     pub fn get_xy(index: Token, size: Size) -> (Size, Size) {
         return (
             (index % size as Token) as Size,

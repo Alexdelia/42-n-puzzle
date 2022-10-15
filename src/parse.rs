@@ -83,7 +83,7 @@ fn parse_size(a: &str) -> Result<Puz, bool> {
                 B = color::BOLD,
                 M = color::MAG
             );
-            usage();
+            usage::usage_initial_state();
             return Err(false);
         }
     };

@@ -31,7 +31,7 @@ impl Puz {
                     self.end_time = SystemTime::now();
                     return true;
                 }
-                self.print_solution();
+                self.print_solution(true);
                 closed.insert(cur.board.clone());
                 continue;
             }
@@ -60,7 +60,7 @@ impl Puz {
             if open.len() > self._max_open {
                 self._max_open = open.len();
             }
-            print!("\ropen: {}  closed: {}", open.len(), closed.len());
+            print!("open: {}   closed: {}    \r", open.len(), closed.len());
         }
 
         self._open_at_end = open.len();

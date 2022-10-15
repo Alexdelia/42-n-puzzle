@@ -1,20 +1,20 @@
 use super::board::Board;
+use super::r#move::Move;
 use super::{Puz, Size, Token};
+use crate::color;
 use byte_unit::Byte;
 use std::mem::size_of;
 
 impl Puz {
     pub fn print(&self) {
-        let size = self._size as usize;
-        for x in 0..size {
-            for y in 0..size {
-                print!("{} ", self._board[x * size + y]);
-            }
-            println!("");
-        }
+        Self::print_other(&self._board, self._size);
     }
 
-    pub fn print_other(board: &Vec<Token>, size: Size) {
+    pub fn print_target(&self) {
+        Self::print_other(&self._target, self._size);
+    }
+
+    pub fn print_other(board: &[Token], size: Size) {
         let size = size as usize;
         for x in 0..size {
             for y in 0..size {
@@ -24,7 +24,7 @@ impl Puz {
         }
     }
 
-    pub fn print_solution(&self) {
+    pub fn print_solution(&self, found: bool) {
         let b_open_now = (self._max_open * size_of::<Board>()) as u128;
         let b_closed_now = (self._closed_at_end * size_of::<Vec<Token>>()) as u128;
         let b_open_max = (self._open_at_end * size_of::<Board>()) as u128;
@@ -33,36 +33,109 @@ impl Puz {
             .duration_since(self.start_time)
             .expect("clock may have gone backwards");
 
-        println!("steps:\t{}", self._solution.len());
-        println!("solution:\t{:?}", self._solution);
+        println!("####################################",);
+        if found {
+            println!(
+                "      {G}steps{C}{B}: {G}{s}{C}",
+                s = self._solution.len(),
+                C = color::CLEAR,
+                B = color::BOLD,
+                G = color::GRE
+            );
+            self.print_solution_arrow();
+        } else {
+            println!(
+                "{B}{R}no solution found{C}",
+                C = color::CLEAR,
+                B = color::BOLD,
+                R = color::RED
+            );
+        }
+        println!();
         println!(
-            "open   now:\t{}\t({})",
-            self._open_at_end,
-            Byte::from_bytes(b_open_now)
+            "   {G}{D}open{C} now{B}: {G}{D}{n}\t{C}{I}({B}{M}{b}{C}{I}){C}",
+            n = self._open_at_end,
+            b = Byte::from_bytes(b_open_now)
                 .get_appropriate_unit(true)
-                .format(1)
+                .format(1),
+            C = color::CLEAR,
+            B = color::BOLD,
+            D = color::DIM,
+            I = color::ITALIC,
+            G = color::GRE,
+            M = color::MAG,
         );
         println!(
-            "closed now:\t{}\t({})",
-            self._closed_at_end,
-            Byte::from_bytes(b_closed_now)
+            " {R}{D}closed{C} now{B}: {R}{D}{n}\t{C}{I}({B}{M}{b}{C}{I}){C}",
+            n = self._closed_at_end,
+            b = Byte::from_bytes(b_closed_now)
                 .get_appropriate_unit(true)
-                .format(1)
+                .format(1),
+            C = color::CLEAR,
+            B = color::BOLD,
+            D = color::DIM,
+            I = color::ITALIC,
+            R = color::RED,
+            M = color::MAG,
         );
         println!(
-            "open   max:\t{}\t({})",
-            self._max_open,
-            Byte::from_bytes(b_open_max)
+            "   {G}{D}open{C} max{B}: {G}{D}{n}\t{C}{I}({B}{M}{b}{C}{I}){C}",
+            n = self._max_open,
+            b = Byte::from_bytes(b_open_max)
                 .get_appropriate_unit(true)
-                .format(1)
+                .format(1),
+            C = color::CLEAR,
+            B = color::BOLD,
+            D = color::DIM,
+            I = color::ITALIC,
+            G = color::GRE,
+            M = color::MAG,
         );
         println!(
-            "open   total:\t{}\t({})",
-            self._open_at_end + self._closed_at_end,
-            Byte::from_bytes(b_open_now + b_closed_now)
+            " {G}{D}open{C} total{B}: {BL}{n}\t{C}{I}({B}{M}{b}{C}{I}){C}",
+            n = self._open_at_end + self._closed_at_end,
+            b = Byte::from_bytes(b_open_now + b_closed_now)
                 .get_appropriate_unit(true)
-                .format(1)
+                .format(1),
+            C = color::CLEAR,
+            B = color::BOLD,
+            D = color::DIM,
+            I = color::ITALIC,
+            G = color::GRE,
+            BL = color::BLU,
+            M = color::MAG,
         );
-        println!("time:\t{:?}", difference);
+        println!();
+        println!(
+            "       {CY}time{C}{B}: {CY}{n:?}{C}",
+            n = difference,
+            C = color::CLEAR,
+            B = color::BOLD,
+            CY = color::CYA,
+        );
+        println!("####################################");
+    }
+
+    fn print_solution_arrow(&self) {
+        let up = "\x1b[38;2;167;84;134m↑\x1b[0m";
+        let down = "\x1b[38;2;80;95;144m↓\x1b[0m";
+        let left = "\x1b[38;2;122;184;92m←\x1b[0m";
+        let right = "\x1b[38;2;212;180;106m→\x1b[0m";
+
+        print!(
+            "   {G}solution{C}{B}:{C} ",
+            C = color::CLEAR,
+            B = color::BOLD,
+            G = color::GRE
+        );
+        for d in self._solution.iter() {
+            match d {
+                Move::Up => print!("{}", up),
+                Move::Down => print!("{}", down),
+                Move::Left => print!("{}", left),
+                Move::Right => print!("{}", right),
+            }
+        }
+        println!();
     }
 }

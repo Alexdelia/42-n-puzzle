@@ -34,7 +34,21 @@ fn main() -> ExitCode {
         Err(_) => return ExitCode::FAILURE,
     };
 
+    println!(
+        "\n{B}# {G}initial state{C} {B}#{C}",
+        C = color::CLEAR,
+        B = color::BOLD,
+        G = color::GRE,
+    );
     p.print();
+    println!(
+        "\n{B}#  {CY}goal state{C}   {B}#{C}",
+        C = color::CLEAR,
+        B = color::BOLD,
+        CY = color::CYA,
+    );
+    p.print_target();
+    println!();
 
     if !p.is_solvable() {
         println!(
@@ -43,16 +57,15 @@ fn main() -> ExitCode {
             B = color::BOLD,
             Y = color::YEL
         );
-        return ExitCode::FAILURE;
+        if p.get_stop() {
+            return ExitCode::FAILURE;
+        }
     }
 
-    println!("Solving...");
     p.start_time = SystemTime::now();
     let solution = p.solve(true);
     p.end_time = SystemTime::now();
-    println!("\nDone!");
-    p.print_solution();
-    println!("solution: {}", solution);
+    p.print_solution(solution);
 
     return ExitCode::SUCCESS;
 }

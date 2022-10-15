@@ -6,7 +6,7 @@ use self::target_type::get_target_snail;
 
 mod board;
 mod graphic;
-mod heuristic;
+pub mod heuristic;
 mod is_solvable;
 mod r#move;
 mod read;
@@ -14,9 +14,9 @@ mod solve;
 pub mod target_type;
 
 type Token = u16;
-type Size = u8;
+pub type Size = u8;
 
-pub enum Startegy {
+pub enum Strategy {
     AStar,
     Greedy,
     Uniform,
@@ -33,7 +33,7 @@ pub struct Puz {
     pub start_time: SystemTime,
     pub end_time: SystemTime,
     _heuristic: fn(&[Token], Size, &[Token]) -> u32,
-    _strategy: Startegy,
+    _strategy: Strategy,
     _stop_at_first_solution: bool,
 }
 
@@ -50,7 +50,7 @@ impl Puz {
             start_time: UNIX_EPOCH,
             end_time: UNIX_EPOCH,
             _heuristic: heuristic::manathan_distance,
-            _strategy: Startegy::AStar,
+            _strategy: Strategy::AStar,
             _stop_at_first_solution: true,
         }
     }
@@ -70,13 +70,25 @@ impl Puz {
             start_time: UNIX_EPOCH,
             end_time: UNIX_EPOCH,
             _heuristic: heuristic::manathan_distance,
-            _strategy: Startegy::AStar,
+            _strategy: Strategy::AStar,
             _stop_at_first_solution: true,
         }
     }
 
     pub fn set_target(&mut self, target: &[Token]) {
         self._target = target.to_vec();
+    }
+
+    pub fn set_heuristic(&mut self, heuristic: fn(&[Token], Size, &[Token]) -> u32) {
+        self._heuristic = heuristic;
+    }
+
+    pub fn set_strategy(&mut self, strategy: Strategy) {
+        self._strategy = strategy;
+    }
+
+    pub fn set_stop_at_first_solution(&mut self, stop_at_first_solution: bool) {
+        self._stop_at_first_solution = stop_at_first_solution;
     }
 
     pub fn get_size(&self) -> Size {

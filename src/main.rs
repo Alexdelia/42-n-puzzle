@@ -1,8 +1,10 @@
 mod color;
+mod parse;
 mod puz;
 mod usage;
 mod utils;
 
+use parse::parse;
 use puz::target_type::get_target_snail;
 use puz::Puz;
 use std::{env::args, process::ExitCode, time::SystemTime};
@@ -14,15 +16,15 @@ fn init_board() -> Result<Puz, bool> {
     dbg!(av.clone());
 
     if av.len() > 1 {
-        p = Puz::new();
-        if !p.read(&av[1], false) {
-            return Err(false);
-        }
+        p = match parse() {
+            Ok(p) => p,
+            Err(_) => return Err(false),
+        };
     } else {
         usage();
         p = Puz::from(3);
+        p.set_target(&get_target_snail(p.get_size()));
     }
-    //p.set_target(&get_target_snail(p.get_size()));
 
     return Ok(p);
 }

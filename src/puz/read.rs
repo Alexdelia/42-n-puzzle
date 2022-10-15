@@ -6,7 +6,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader, ErrorKind};
 
 impl Puz {
-    pub fn read(&mut self, file: &String, target: bool) -> bool {
+    pub fn read(&mut self, file: &str, target: bool) -> bool {
         let f = match File::open(file) {
             Ok(f) => f,
             Err(e) => match e.kind() {
@@ -46,7 +46,7 @@ impl Puz {
         return true;
     }
 
-    fn _read_size(&mut self, line: &String) -> bool {
+    fn _read_size(&mut self, line: &str) -> bool {
         let s = line.splitn(2, '#').next().unwrap().trim().to_string();
         let size = match ft_parse::<Size>(&s) {
             Ok(s) => s,
@@ -140,7 +140,7 @@ impl Puz {
         return true;
     }
 
-    fn _parse_line(&self, line: &String, i: usize) -> Result<Vec<Token>, bool> {
+    fn _parse_line(&self, line: &str, i: usize) -> Result<Vec<Token>, bool> {
         let mut nums: Vec<Token> = Vec::new();
         for n in line.split_whitespace() {
             match ft_parse::<Token>(n) {

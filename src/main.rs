@@ -17,7 +17,7 @@ fn init_board() -> Result<Puz, bool> {
             return Err(false);
         }
     } else {
-        p = Puz::from(3);
+        p = Puz::from(4);
     }
     p.set_target(&get_target_snake(p.get_size()));
 
@@ -31,26 +31,26 @@ fn main() -> ExitCode {
     };
 
     // to fix is_solvable
-    // if !p.is_solvable() {
-    //     p.print();
-    //     println!(
-    //         "{B}initial state is {Y}not{C} {B}solvable{C}",
-    //         C = color::CLEAR,
-    //         B = color::BOLD,
-    //         Y = color::YEL
-    //     );
-    //     return ExitCode::FAILURE;
-    // }
+    if !p.is_solvable() {
+        // p.print();
+        println!(
+            "{B}initial state is {Y}not{C} {B}solvable{C}",
+            C = color::CLEAR,
+            B = color::BOLD,
+            Y = color::YEL
+        );
+        // return ExitCode::FAILURE;
+    }
 
     p.print();
 
     println!("Solving...");
     let now = SystemTime::now();
-    let solution = p.solve();
-    println!("{:?}", now.elapsed().unwrap());
+    let solution = p.solve(true);
+    println!("\n{:?}", now.elapsed().unwrap());
     println!("Done!");
-
-    println!("Solution: {:?}", solution);
+    p.print_solution();
+    println!("solution: {}", solution);
 
     return ExitCode::SUCCESS;
 }

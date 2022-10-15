@@ -89,7 +89,6 @@ impl Board {
             blank: new_x as Token + new_y as Token * size as Token,
             score: 0,
             solution: self.solution.clone(),
-            sol_len: self.sol_len + 1,
         };
         new_board
             .board

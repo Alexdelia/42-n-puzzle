@@ -7,7 +7,6 @@ pub struct Board {
     pub blank: Token,
     pub score: u32,
     pub solution: Vec<Move>,
-    pub sol_len: usize,
 }
 
 impl Ord for Board {

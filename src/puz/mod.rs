@@ -16,6 +16,10 @@ pub struct Puz {
     _size: Size,
     _board: Vec<Token>,
     _target: Vec<Token>,
+    _solution: Vec<r#move::Move>,
+    _max_open: usize,
+    _open_at_end: usize,
+    _closed_at_end: usize,
 }
 
 impl Puz {
@@ -24,6 +28,10 @@ impl Puz {
             _size: 0,
             _board: Vec::new(),
             _target: Vec::new(),
+            _solution: Vec::new(),
+            _max_open: 0,
+            _open_at_end: 0,
+            _closed_at_end: 0,
         }
     }
 
@@ -35,6 +43,10 @@ impl Puz {
             _size: size,
             _board: board,
             _target: Vec::new(),
+            _solution: Vec::new(),
+            _max_open: 0,
+            _open_at_end: 0,
+            _closed_at_end: 0,
         }
     }
 

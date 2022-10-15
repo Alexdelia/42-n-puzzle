@@ -1,7 +1,7 @@
 use crate::puz::r#move::Move;
 use crate::puz::{Size, Token};
 
-pub fn get_target_snake(size: Size) -> Vec<Token> {
+pub fn get_target_snail(size: Size) -> Vec<Token> {
     let mut target: Vec<Token> = vec![0; size.pow(2) as usize];
     let mut x: Size = 0;
     let mut y: Size = 0;

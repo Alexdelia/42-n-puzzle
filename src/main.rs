@@ -2,7 +2,7 @@ mod color;
 mod puz;
 mod utils;
 
-use puz::target_type::get_target_snake;
+use puz::target_type::get_target_snail;
 use puz::Puz;
 use std::{env::args, process::ExitCode, time::SystemTime};
 
@@ -13,13 +13,14 @@ fn init_board() -> Result<Puz, bool> {
 
     if av.len() > 1 {
         p = Puz::new();
-        if !p.read(&av[1]) {
+        if !p.read(&av[1], false) {
             return Err(false);
         }
     } else {
-        p = Puz::from(4);
+        Puz::usage();
+        p = Puz::from(3);
     }
-    p.set_target(&get_target_snake(p.get_size()));
+    p.set_target(&get_target_snail(p.get_size()));
 
     return Ok(p);
 }
@@ -30,19 +31,17 @@ fn main() -> ExitCode {
         Err(_) => return ExitCode::FAILURE,
     };
 
-    // to fix is_solvable
+    p.print();
+
     if !p.is_solvable() {
-        // p.print();
         println!(
             "{B}initial state is {Y}not{C} {B}solvable{C}",
             C = color::CLEAR,
             B = color::BOLD,
             Y = color::YEL
         );
-        // return ExitCode::FAILURE;
+        return ExitCode::FAILURE;
     }
-
-    p.print();
 
     println!("Solving...");
     p.start_time = SystemTime::now();

@@ -5,6 +5,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 mod board;
 mod graphic;
 mod heuristic;
+mod is_solvable;
 mod r#move;
 mod read;
 mod solve;

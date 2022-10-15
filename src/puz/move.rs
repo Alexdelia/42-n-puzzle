@@ -22,15 +22,6 @@ impl Move {
         m[Move::Left as usize].a = x > 0;
         m[Move::Right as usize].a = x < size - 1;
     }
-
-    pub fn get_opposite(m: Move) -> Move {
-        match m {
-            Move::Up => Move::Down,
-            Move::Down => Move::Up,
-            Move::Left => Move::Right,
-            Move::Right => Move::Left,
-        }
-    }
 }
 
 impl AllowedMove {

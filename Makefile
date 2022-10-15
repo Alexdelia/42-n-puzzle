@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/30 19:21:49 by adelille          #+#    #+#              #
-#    Updated: 2022/10/14 20:21:43 by adelille         ###   ########.fr        #
+#    Updated: 2022/10/15 15:09:06 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ all:		$(NAME)
 
 $(NAME):
 	$(CC) build $(CCFLAGS)
-	@cp target/*/$(NAME) .
+	@cp target/*/$(NAME) . || true
 
 run:		$(NAME)
 	$(CC) run

@@ -67,43 +67,4 @@ impl Puz {
         self._closed_at_end = closed.len();
         return false;
     }
-
-    fn _min_score_index(open: &Vec<Board>) -> usize {
-        let mut min_score = open[0].score;
-        let mut min_index = 0;
-        for i in 1..open.len() {
-            if open[i].score < min_score {
-                min_score = open[i].score;
-                min_index = i;
-            }
-        }
-        return min_index;
-    }
-
-    pub fn is_solvable(&self) -> bool {
-        let size = self._size as Token;
-        let mut inversions = 0;
-        let mut blank_row = 0;
-
-        for x in 0..size.pow(2) {
-            if self._board[x as usize] == 0 {
-                blank_row = x / size;
-                continue;
-            }
-            for y in x..size.pow(2) {
-                if self._board[y as usize] == 0 {
-                    continue;
-                }
-                if self._board[x as usize] > self._board[y as usize] {
-                    inversions += 1;
-                }
-            }
-        }
-
-        if size % 2 == 1 {
-            return inversions % 2 == 1;
-        } else {
-            return (inversions + blank_row) % 2 == 0;
-        }
-    }
 }

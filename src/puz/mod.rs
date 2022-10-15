@@ -1,5 +1,5 @@
-/*use rand::seq::SliceRandom;
-use rand::thread_rng;*/
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 mod board;
 mod graphic;
@@ -28,13 +28,14 @@ impl Puz {
     }
 
     pub fn from(size: Size) -> Puz {
-        let mut p = Puz {
+        let mut board = (0..(size as Token).pow(2)).collect::<Vec<Token>>();
+        board.shuffle(&mut thread_rng());
+
+        Puz {
             _size: size,
-            // will need to generate a random permutation of 1..size^2
-            _board: (0..(size as Token).pow(2)).collect::<Vec<Token>>(), //.shuffle(&mut thread_rng()),
+            _board: board,
             _target: Vec::new(),
-        };
-        return p;
+        }
     }
 
     pub fn set_target(&mut self, target: &[Token]) {

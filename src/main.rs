@@ -1,10 +1,12 @@
 mod color;
 mod puz;
+mod usage;
 mod utils;
 
 use puz::target_type::get_target_snail;
 use puz::Puz;
 use std::{env::args, process::ExitCode, time::SystemTime};
+use usage::usage;
 
 fn init_board() -> Result<Puz, bool> {
     let mut p: Puz;
@@ -17,10 +19,10 @@ fn init_board() -> Result<Puz, bool> {
             return Err(false);
         }
     } else {
-        Puz::usage();
+        usage();
         p = Puz::from(3);
     }
-    p.set_target(&get_target_snail(p.get_size()));
+    //p.set_target(&get_target_snail(p.get_size()));
 
     return Ok(p);
 }

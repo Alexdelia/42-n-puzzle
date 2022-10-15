@@ -2,6 +2,8 @@ use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use self::target_type::get_target_snail;
+
 mod board;
 mod graphic;
 mod heuristic;
@@ -14,6 +16,12 @@ pub mod target_type;
 type Token = u16;
 type Size = u8;
 
+pub enum Startegy {
+    AStar,
+    Greedy,
+    Uniform,
+}
+
 pub struct Puz {
     _size: Size,
     _board: Vec<Token>,
@@ -24,6 +32,9 @@ pub struct Puz {
     _closed_at_end: usize,
     pub start_time: SystemTime,
     pub end_time: SystemTime,
+    _heuristic: fn(&[Token], Size, &[Token]) -> u32,
+    _strategy: Startegy,
+    _stop_at_first_solution: bool,
 }
 
 impl Puz {
@@ -38,6 +49,9 @@ impl Puz {
             _closed_at_end: 0,
             start_time: UNIX_EPOCH,
             end_time: UNIX_EPOCH,
+            _heuristic: heuristic::manathan_distance,
+            _strategy: Startegy::AStar,
+            _stop_at_first_solution: true,
         }
     }
 
@@ -55,6 +69,9 @@ impl Puz {
             _closed_at_end: 0,
             start_time: UNIX_EPOCH,
             end_time: UNIX_EPOCH,
+            _heuristic: heuristic::manathan_distance,
+            _strategy: Startegy::AStar,
+            _stop_at_first_solution: true,
         }
     }
 

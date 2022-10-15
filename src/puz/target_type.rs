@@ -2,13 +2,14 @@ use crate::puz::r#move::Move;
 use crate::puz::{Size, Token};
 
 pub fn get_target_snail(size: Size) -> Vec<Token> {
+    let size: Token = size as Token;
     let mut target: Vec<Token> = vec![0; (size as usize).pow(2)];
-    let mut x: Size = 0;
-    let mut y: Size = 0;
+    let mut x: Token = 0;
+    let mut y: Token = 0;
     let mut dir: Move = Move::Right;
     let mut i: Token = 1;
 
-    while i < size.pow(2).into() {
+    while i < size.pow(2) {
         target[(x * size + y) as usize] = i;
         i += 1;
         match dir {
@@ -49,7 +50,7 @@ pub fn get_target_snail(size: Size) -> Vec<Token> {
 
     // debug
     println!("Target:");
-    crate::puz::Puz::print_other(&target, size);
+    crate::puz::Puz::print_other(&target, size as Size);
     println!();
 
     return target;

@@ -2,8 +2,6 @@ use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use self::target_type::get_target_snail;
-
 mod board;
 mod graphic;
 pub mod heuristic;

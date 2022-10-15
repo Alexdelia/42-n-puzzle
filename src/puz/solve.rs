@@ -1,4 +1,5 @@
 use std::collections::{BinaryHeap, HashSet};
+use std::time::SystemTime;
 
 use super::board::Board;
 use super::heuristic::manathan_distance;
@@ -27,6 +28,7 @@ impl Puz {
                 self._open_at_end = open.len();
                 self._closed_at_end = closed.len();
                 if stop {
+                    self.end_time = SystemTime::now();
                     return true;
                 }
                 self.print_solution();

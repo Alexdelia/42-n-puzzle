@@ -1,5 +1,6 @@
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 mod board;
 mod graphic;
@@ -20,6 +21,8 @@ pub struct Puz {
     _max_open: usize,
     _open_at_end: usize,
     _closed_at_end: usize,
+    pub start_time: SystemTime,
+    pub end_time: SystemTime,
 }
 
 impl Puz {
@@ -32,6 +35,8 @@ impl Puz {
             _max_open: 0,
             _open_at_end: 0,
             _closed_at_end: 0,
+            start_time: UNIX_EPOCH,
+            end_time: UNIX_EPOCH,
         }
     }
 
@@ -47,6 +52,8 @@ impl Puz {
             _max_open: 0,
             _open_at_end: 0,
             _closed_at_end: 0,
+            start_time: UNIX_EPOCH,
+            end_time: UNIX_EPOCH,
         }
     }
 

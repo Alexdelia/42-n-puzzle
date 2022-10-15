@@ -45,10 +45,10 @@ fn main() -> ExitCode {
     p.print();
 
     println!("Solving...");
-    let now = SystemTime::now();
+    p.start_time = SystemTime::now();
     let solution = p.solve(true);
-    println!("\n{:?}", now.elapsed().unwrap());
-    println!("Done!");
+    p.end_time = SystemTime::now();
+    println!("\nDone!");
     p.print_solution();
     println!("solution: {}", solution);
 

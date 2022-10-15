@@ -2,15 +2,15 @@ use std::collections::{BinaryHeap, HashSet};
 use std::time::SystemTime;
 
 use super::board::Board;
-use super::heuristic::manathan_distance;
 use super::r#move::{AllowedMove, Move};
-use super::{Puz, Token};
+use super::{Puz, Strategy, Token};
 
 impl Puz {
-    pub fn solve(&mut self, stop: bool) -> bool {
+    pub fn solve(&mut self) -> bool {
         let mut open = BinaryHeap::<Board>::new();
         let mut closed = HashSet::<Vec<Token>>::new();
         let mut allowed_move: [AllowedMove; 4] = AllowedMove::new_array();
+        let heuristic = self._heuristic;
 
         open.push(Board {
             board: self._board.clone(),
@@ -27,8 +27,8 @@ impl Puz {
                 self._solution = cur.solution;
                 self._open_at_end = open.len();
                 self._closed_at_end = closed.len();
-                if stop {
-                    self.end_time = SystemTime::now();
+                self.end_time = SystemTime::now();
+                if self._stop_at_first_solution {
                     return true;
                 }
                 self.print_solution(true);
@@ -48,8 +48,10 @@ impl Puz {
                 if m.a {
                     let mut new_board = cur.play_move(self._size, m.m);
                     if !closed.contains(&new_board.board) {
-                        new_board.score = new_board.solution.len() as u32
-                            + manathan_distance(&new_board.board, self._size, &self._target);
+                        new_board.score = self._score(
+                            new_board.solution.len() as u32,
+                            heuristic(&new_board.board, self._size, &self._target),
+                        );
                         open.push(new_board);
                     }
                 }
@@ -60,11 +62,23 @@ impl Puz {
             if open.len() > self._max_open {
                 self._max_open = open.len();
             }
-            print!("open: {}   closed: {}    \r", open.len(), closed.len());
+            print!(
+                "open: {}   closed: {}                \r",
+                open.len(),
+                closed.len()
+            );
         }
 
         self._open_at_end = open.len();
         self._closed_at_end = closed.len();
         return false;
+    }
+
+    fn _score(&self, g: u32, h: u32) -> u32 {
+        match self._strategy {
+            Strategy::AStar => g + h,
+            Strategy::Greedy => h,
+            Strategy::Uniform => g,
+        }
     }
 }

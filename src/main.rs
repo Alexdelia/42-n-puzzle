@@ -63,9 +63,10 @@ fn main() -> ExitCode {
     }
 
     p.start_time = SystemTime::now();
-    let solution = p.solve(true);
+    let solution = p.solve();
     p.end_time = SystemTime::now();
     p.print_solution(solution);
+    println!();
 
     return ExitCode::SUCCESS;
 }

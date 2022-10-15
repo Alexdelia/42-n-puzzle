@@ -1,9 +1,11 @@
 use super::board::Board;
 use super::r#move::Move;
 use super::{Puz, Size, Token};
-use crate::color;
+use crate::{color, err_no};
 use byte_unit::Byte;
+use std::collections::btree_set::Difference;
 use std::mem::size_of;
+use std::time::Duration;
 
 impl Puz {
     pub fn print(&self) {
@@ -28,10 +30,20 @@ impl Puz {
         let b_open_now = (self._open_at_end * size_of::<Board>()) as u128;
         let b_closed_now = (self._closed_at_end * size_of::<Vec<Token>>()) as u128;
         let b_open_max = (self._max_open * size_of::<Board>()) as u128;
-        let difference = self
-            .end_time
-            .duration_since(self.start_time)
-            .expect("clock may have gone backwards");
+        let difference: Duration;
+
+        match self.end_time.duration_since(self.start_time) {
+            Ok(d) => difference = d,
+            Err(e) => {
+                err_no!(
+                    "time went backward!?\n({:?} -> {:?})\n\t{}",
+                    self.start_time,
+                    self.end_time,
+                    e
+                );
+                difference = std::time::Duration::new(0, 0);
+            }
+        };
 
         println!("####################################",);
         if found {
@@ -43,12 +55,19 @@ impl Puz {
                 G = color::GRE
             );
             self.print_solution_arrow();
-        } else {
+        } else if self._solution.is_empty() {
             println!(
                 "\t{B}{R}no solution found{C}",
                 C = color::CLEAR,
                 B = color::BOLD,
                 R = color::RED
+            );
+        } else {
+            println!(
+                "\t{B}{G}conclusion{C}",
+                C = color::CLEAR,
+                B = color::BOLD,
+                G = color::GRE
             );
         }
         println!();
@@ -113,7 +132,7 @@ impl Puz {
             B = color::BOLD,
             CY = color::CYA,
         );
-        println!("####################################");
+        print!("####################################\r");
     }
 
     fn print_solution_arrow(&self) {

@@ -25,9 +25,9 @@ impl Puz {
     }
 
     pub fn print_solution(&self, found: bool) {
-        let b_open_now = (self._max_open * size_of::<Board>()) as u128;
+        let b_open_now = (self._open_at_end * size_of::<Board>()) as u128;
         let b_closed_now = (self._closed_at_end * size_of::<Vec<Token>>()) as u128;
-        let b_open_max = (self._open_at_end * size_of::<Board>()) as u128;
+        let b_open_max = (self._max_open * size_of::<Board>()) as u128;
         let difference = self
             .end_time
             .duration_since(self.start_time)
@@ -45,7 +45,7 @@ impl Puz {
             self.print_solution_arrow();
         } else {
             println!(
-                "{B}{R}no solution found{C}",
+                "\t{B}{R}no solution found{C}",
                 C = color::CLEAR,
                 B = color::BOLD,
                 R = color::RED

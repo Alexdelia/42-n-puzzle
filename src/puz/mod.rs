@@ -13,7 +13,7 @@ mod read;
 mod solve;
 pub mod target_type;
 
-type Token = u16;
+pub type Token = u16;
 pub type Size = u8;
 
 pub enum Strategy {

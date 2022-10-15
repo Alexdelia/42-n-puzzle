@@ -54,7 +54,7 @@ impl Puz {
         };
         if self._size != 0 && self._size != size {
             err!(
-                "expected target size of {G}{s}{C}{B}, got {R}{f}",
+                "expected goal_state size of {G}{s}{C}{B}, got {R}{f}",
                 s = self._size,
                 f = size,
                 C = color::CLEAR,
@@ -74,7 +74,6 @@ impl Puz {
                 R = color::RED
             );
         }
-        println!("size: {}", self._size);
         return true;
     }
 
@@ -93,7 +92,7 @@ impl Puz {
                 continue;
             }
 
-            let nums = match self._parse_line(&line, i) {
+            let nums = match self._parse_line(&line, i, target) {
                 Ok(n) => n,
                 Err(_) => return false,
             };
@@ -140,11 +139,13 @@ impl Puz {
         return true;
     }
 
-    fn _parse_line(&self, line: &str, i: usize) -> Result<Vec<Token>, bool> {
+    fn _parse_line(&self, line: &str, i: usize, target: bool) -> Result<Vec<Token>, bool> {
         let mut nums: Vec<Token> = Vec::new();
         for n in line.split_whitespace() {
             match ft_parse::<Token>(n) {
-                Ok(n) => match self._board.contains(&n) {
+                Ok(n) => match (target == false && self._board.contains(&n))
+                    || (target == true && self._target.contains(&n))
+                {
                     true => {
                         err_no!(
                             "duplicate {R}{n}{C}\t{B}{I}(second on line {C}{B}{M}{l}{C}{B})",

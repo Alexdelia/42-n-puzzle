@@ -13,7 +13,6 @@ use usage::usage;
 fn init_board() -> Result<Puz, bool> {
     let mut p: Puz;
     let av = args().collect::<Vec<String>>();
-    dbg!(av.clone());
 
     if av.len() > 1 {
         p = match parse() {

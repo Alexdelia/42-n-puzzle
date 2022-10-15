@@ -2,7 +2,7 @@ use crate::color;
 use crate::err_no;
 use crate::puz::heuristic;
 use crate::puz::target_type;
-use crate::puz::{Puz, Size, Strategy};
+use crate::puz::{Puz, Size, Strategy, Token};
 use crate::usage;
 use crate::utils::ft_parse;
 use std::env::args;
@@ -21,20 +21,18 @@ pub fn parse() -> Result<Puz, bool> {
         p = Puz::from(3);
     }
 
-    match av[1].as_str() {
-        "m" | "manhattan" => p.set_heuristic(heuristic::manathan_distance),
-        _ => {
-            err_no!(
-                "\"{M}{a}{C}{B}\" is not a valid heuristic",
-                a = av[1],
-                C = color::CLEAR,
-                B = color::BOLD,
-                M = color::MAG
-            );
-            usage::usage_heuristic();
-            return Err(false);
+    match parse_heuristic(av[1].as_str()) {
+        Ok(h) => p.set_heuristic(h),
+        Err(_) => return Err(false),
+    }
+
+    if av.len() > 2 {
+        match parse_av2(av[2].as_str()) {
+            Ok(s) => p.set_strategy(s),
+            Err(_) => return Err(false),
         }
-    };
+    }
+
     if av.len() > 2 {
         match av[2].as_str() {
             "a" | "astar" => p.set_strategy(Strategy::AStar),
@@ -52,8 +50,6 @@ pub fn parse() -> Result<Puz, bool> {
                 return Err(false);
             }
         };
-    } else {
-        p.set_strategy(Strategy::AStar);
     }
 
     if av.len() > 4 {
@@ -74,6 +70,26 @@ pub fn parse() -> Result<Puz, bool> {
                 }
             }
         };
+    } else {
+        p.set_target(&target_type::get_target_snail(p.get_size()));
+    }
+
+    if av.len() > 5 {
+        match av[5].as_str() {
+            "t" | "true" => p.set_stop_at_first_solution(true),
+            "f" | "false" => p.set_stop_at_first_solution(false),
+            _ => {
+                err_no!(
+                    "\"{M}{a}{C}{B}\" is not a valid stop_at_first_solution",
+                    a = av[5],
+                    C = color::CLEAR,
+                    B = color::BOLD,
+                    M = color::MAG
+                );
+                usage::usage_stop_at_first_solution();
+                return Err(false);
+            }
+        }
     }
 
     return Ok(p);
@@ -90,6 +106,17 @@ fn parse_av3(a: &str) -> Result<Puz, bool> {
     } else {
         let n = ft_parse::<Size>(a);
         if n.is_ok() {
+            if n.unwrap() < 2 {
+                err_no!(
+                    "expected size >= {G}2{C}{B}, got {R}{s}",
+                    s = a,
+                    C = color::CLEAR,
+                    B = color::BOLD,
+                    R = color::RED,
+                    G = color::GRE
+                );
+                return Err(false);
+            }
             p = Puz::from(n.unwrap());
         } else {
             Puz::new().read(a, false); // recall to get error message
@@ -106,4 +133,21 @@ fn parse_av3(a: &str) -> Result<Puz, bool> {
     };
 
     return Ok(p);
+}
+
+fn parse_heuristic(a: &str) -> Result<fn(&[Token], Size, &[Token]) -> u32, bool> {
+    match a {
+        "m" | "manhattan" => Ok(heuristic::manathan_distance),
+        _ => {
+            err_no!(
+                "\"{M}{a}{C}{B}\" is not a valid heuristic",
+                a = a,
+                C = color::CLEAR,
+                B = color::BOLD,
+                M = color::MAG
+            );
+            usage::usage_heuristic();
+            return Err(false);
+        }
+    }
 }

@@ -2,7 +2,7 @@ use crate::puz::r#move::Move;
 use crate::puz::{Size, Token};
 
 pub fn get_target_snail(size: Size) -> Vec<Token> {
-    let mut target: Vec<Token> = vec![0; size.pow(2) as usize];
+    let mut target: Vec<Token> = vec![0; (size as usize).pow(2)];
     let mut x: Size = 0;
     let mut y: Size = 0;
     let mut dir: Move = Move::Right;
@@ -46,6 +46,18 @@ pub fn get_target_snail(size: Size) -> Vec<Token> {
             }
         }
     }
+
+    // debug
+    println!("Target:");
+    crate::puz::Puz::print_other(&target, size);
+    println!();
+
+    return target;
+}
+
+pub fn get_target_classic(size: Size) -> Vec<Token> {
+    let mut target: Vec<Token> = (1..(size as Token).pow(2)).collect();
+    target.push(0);
 
     // debug
     println!("Target:");

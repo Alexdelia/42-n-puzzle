@@ -48,12 +48,12 @@ pub fn get_target_snail(size: Size) -> Vec<Token> {
         }
     }
 
-    return target;
+    target
 }
 
 pub fn get_target_classic(size: Size) -> Vec<Token> {
     let mut target: Vec<Token> = (1..(size as Token).pow(2)).collect();
     target.push(0);
 
-    return target;
+    target
 }

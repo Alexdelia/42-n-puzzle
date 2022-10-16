@@ -98,9 +98,9 @@ impl Puz {
     }
 
     pub fn get_xy(index: Token, size: Size) -> (Size, Size) {
-        return (
+        (
             (index % size as Token) as Size,
             (index / size as Token) as Size,
-        );
+        )
     }
 }

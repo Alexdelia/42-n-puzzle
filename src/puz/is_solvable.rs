@@ -12,7 +12,7 @@ impl Puz {
                 self._target.iter().position(|&x| x == 0).unwrap() as usize / self._size as usize;
         }
 
-        return board_inversions % 2 == target_inversions % 2;
+        board_inversions % 2 == target_inversions % 2
     }
 
     fn _inversions(board: &[Token]) -> usize {
@@ -27,6 +27,6 @@ impl Puz {
                 }
             }
         }
-        return i;
+        i
     }
 }

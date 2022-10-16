@@ -60,7 +60,7 @@ impl AllowedMove {
             m: Move::Right,
             a: true,
         };
-        return m;
+        m
     }
 }
 
@@ -85,6 +85,6 @@ impl Board {
             .board
             .swap((x + y * size) as usize, (new_x + new_y * size) as usize);
         new_board.solution.push(m);
-        return new_board;
+        new_board
     }
 }

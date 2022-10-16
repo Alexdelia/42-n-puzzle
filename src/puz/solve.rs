@@ -19,7 +19,7 @@ impl Puz {
             solution: Vec::new(),
         });
 
-        while open.is_empty() == false {
+        while !open.is_empty() {
             let cur = open.pop().unwrap();
             if cur.board == self._target
                 && (self._solution.is_empty() || cur.solution.len() < self._solution.len())
@@ -71,7 +71,7 @@ impl Puz {
 
         self._open_at_end = open.len();
         self._closed_at_end = closed.len();
-        return false;
+        false
     }
 
     fn _score(&self, g: u32, h: u32) -> u32 {

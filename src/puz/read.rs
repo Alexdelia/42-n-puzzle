@@ -33,21 +33,21 @@ impl Puz {
             return false;
         }
 
-        return true;
+        true
     }
 
     fn _read_skip(f: &Vec<String>, i: &mut usize) -> bool {
-        while *i < f.len() && f[*i].trim().starts_with('#') && f[*i].trim().len() > 0 {
+        while *i < f.len() && f[*i].trim().starts_with('#') && !f[*i].trim().is_empty() {
             *i += 1;
         }
         if *i == f.len() {
             err!("unexpected end of file");
         }
-        return true;
+        true
     }
 
     fn _read_size(&mut self, line: &str) -> bool {
-        let s = line.splitn(2, '#').next().unwrap().trim().to_string();
+        let s = line.split('#').next().unwrap().trim().to_string();
         let size = match ft_parse::<Size>(&s) {
             Ok(s) => s,
             Err(_) => return false,
@@ -74,7 +74,7 @@ impl Puz {
                 R = color::RED
             );
         }
-        return true;
+        true
     }
 
     // need to read an initial state of format:
@@ -85,9 +85,9 @@ impl Puz {
     fn _read_grid(&mut self, f: &Vec<String>, mut i: usize, target: bool) -> bool {
         let mut n_extend: usize = 0;
         while i < f.len() && n_extend <= self._size as usize {
-            let line = f[i].splitn(2, '#').next().unwrap().trim().to_string();
+            let line = f[i].split('#').next().unwrap().trim().to_string();
 
-            if f[i].starts_with('#') || line.len() == 0 {
+            if f[i].starts_with('#') || line.is_empty() {
                 i += 1;
                 continue;
             }
@@ -98,7 +98,7 @@ impl Puz {
             };
 
             if n_extend == self._size as usize {
-                if nums.len() > 0 {
+                if !nums.is_empty() {
                     err!(
                         "expected no more value, got \"{R}{l}{C}{B}\"",
                         l = f[i],
@@ -136,32 +136,31 @@ impl Puz {
             );
         }
 
-        return true;
+        true
     }
 
     fn _parse_line(&self, line: &str, i: usize, target: bool) -> Result<Vec<Token>, bool> {
         let mut nums: Vec<Token> = Vec::new();
         for n in line.split_whitespace() {
             match ft_parse::<Token>(n) {
-                Ok(n) => match (target == false && self._board.contains(&n))
-                    || (target == true && self._target.contains(&n))
-                {
-                    true => {
-                        err_no!(
-                            "duplicate {R}{n}{C}\t{B}{I}(second on line {C}{B}{M}{l}{C}{B})",
-                            n = n,
-                            l = i + 1,
-                            C = color::CLEAR,
-                            B = color::BOLD,
-                            I = color::ITALIC,
-                            R = color::RED,
-                            M = color::MAG
-                        );
-                        return Err(false);
-                    }
-                    false => match n < (self._size as Token).pow(2) {
-                        false => {
+                Ok(n) => {
+                    match !(!target || !self._board.contains(&n) && !self._target.contains(&n)) {
+                        true => {
                             err_no!(
+                                "duplicate {R}{n}{C}\t{B}{I}(second on line {C}{B}{M}{l}{C}{B})",
+                                n = n,
+                                l = i + 1,
+                                C = color::CLEAR,
+                                B = color::BOLD,
+                                I = color::ITALIC,
+                                R = color::RED,
+                                M = color::MAG
+                            );
+                            return Err(false);
+                        }
+                        false => match n < (self._size as Token).pow(2) {
+                            false => {
+                                err_no!(
 								"expected {G}0{C} {B}<= {I}n{C} {B}<= {G}{s}{C}{B}, got {R}{n}{C}\n\t{B}\"{M}{l}{C}{B}\"\t{I}(line {C}{B}{M}{i}{C}{B}{I})",
 								n = n,
 								s = (self._size as Token).pow(2) - 1,
@@ -174,14 +173,15 @@ impl Puz {
 								R = color::RED,
 								M = color::MAG
 							);
-                            return Err(false);
-                        }
-                        true => nums.push(n),
-                    },
-                },
+                                return Err(false);
+                            }
+                            true => nums.push(n),
+                        },
+                    }
+                }
                 Err(_) => return Err(false),
             }
         }
-        return Ok(nums);
+        Ok(nums)
     }
 }

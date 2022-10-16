@@ -12,9 +12,8 @@ use usage::usage;
 
 fn init_board() -> Result<Puz, bool> {
     let mut p: Puz;
-    let av = args().collect::<Vec<String>>();
 
-    if av.len() > 1 {
+    if args().count() > 1 {
         p = match parse() {
             Ok(p) => p,
             Err(_) => return Err(false),
@@ -25,7 +24,7 @@ fn init_board() -> Result<Puz, bool> {
         p.set_target(&get_target_snail(p.get_size()));
     }
 
-    return Ok(p);
+    Ok(p)
 }
 
 fn main() -> ExitCode {
@@ -68,5 +67,5 @@ fn main() -> ExitCode {
     p.print_solution(solution);
     println!();
 
-    return ExitCode::SUCCESS;
+    ExitCode::SUCCESS
 }

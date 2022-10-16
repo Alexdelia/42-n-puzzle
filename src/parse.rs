@@ -94,6 +94,8 @@ fn parse_size(a: &str) -> Result<Puz, bool> {
 fn parse_heuristic(a: &str) -> Result<fn(&[Token], Size, &[Token]) -> u32, bool> {
     match a {
         "m" | "manhattan" => Ok(heuristic::manathan_distance),
+        "e" | "euclidean" => Ok(heuristic::euclidean_distance),
+        "t" | "tiles out of place" => Ok(heuristic::tiles_out_of_place),
         _ => {
             err_no!(
                 "\"{M}{a}{C}{B}\" is not a valid heuristic",

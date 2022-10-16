@@ -39,7 +39,7 @@ pub fn usage() {
 
 pub fn usage_heuristic() {
     println!(
-		"	{B}{CY}<heuristic>:{C} {B}{M}manhattan{C} {B}| {M}hamming{C} {B}| {M}linear_conflict{C} {B}| {M}euclidean{C}
+		"	{B}{CY}<heuristic>:{C} {B}{M}manhattan{C} {B}| {M}euclidean{C} {B}| {M}tiles out of place{C}
 		{I}{B}({Y}optional{C} {I}| {M}default: {B}manhattan{C} {I}| {Y}first letter is enough{C}{I}{B}){C}",
 		C = color::CLEAR,
 		B = color::BOLD,

@@ -6,7 +6,7 @@
 #    By: adelille <adelille@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/30 19:21:49 by adelille          #+#    #+#              #
-#    Updated: 2022/10/15 15:09:06 by adelille         ###   ########.fr        #
+#    Updated: 2022/10/16 11:22:28 by adelille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME =	n-puzzle
 CC =	cargo
 RM = 	rm -rf
 
-#CCFLAGS = --release
+CCFLAGS = --release
 
 # **************************************************************************** #
 #	MAKEFILE	#

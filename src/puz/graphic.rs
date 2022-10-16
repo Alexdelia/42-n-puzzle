@@ -3,7 +3,6 @@ use super::r#move::Move;
 use super::{Puz, Size, Token};
 use crate::{color, err_no};
 use byte_unit::Byte;
-use std::collections::btree_set::Difference;
 use std::mem::size_of;
 use std::time::Duration;
 

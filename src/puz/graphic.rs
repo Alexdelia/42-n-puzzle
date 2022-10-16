@@ -21,7 +21,7 @@ impl Puz {
             for y in 0..size {
                 print!("{} ", board[x * size + y]);
             }
-            println!("");
+            println!();
         }
     }
 
@@ -29,10 +29,8 @@ impl Puz {
         let b_open_now = (self._open_at_end * size_of::<Board>()) as u128;
         let b_closed_now = (self._closed_at_end * size_of::<Vec<Token>>()) as u128;
         let b_open_max = (self._max_open * size_of::<Board>()) as u128;
-        let difference: Duration;
-
-        match self.end_time.duration_since(self.start_time) {
-            Ok(d) => difference = d,
+        let difference: Duration = match self.end_time.duration_since(self.start_time) {
+            Ok(d) => d,
             Err(e) => {
                 err_no!(
                     "time went backward!?\n({:?} -> {:?})\n\t{}",
@@ -40,7 +38,7 @@ impl Puz {
                     self.end_time,
                     e
                 );
-                difference = std::time::Duration::new(0, 0);
+                std::time::Duration::new(0, 0)
             }
         };
 

@@ -1,5 +1,7 @@
 use super::{Size, Token};
 
+pub type HeuristicFn = fn(&[Token], Size, &[Token]) -> u32;
+
 pub fn manathan_distance(board: &[Token], size: Size, target: &[Token]) -> u32 {
     let size: Token = size as Token;
     let mut distance = 0;
@@ -20,8 +22,8 @@ pub fn manathan_distance(board: &[Token], size: Size, target: &[Token]) -> u32 {
                 target_y = f / size;
             }
         }
-        distance +=
-            (x as i32 - target_x as i32).unsigned_abs() + (y as i32 - target_y as i32).unsigned_abs();
+        distance += (x as i32 - target_x as i32).unsigned_abs()
+            + (y as i32 - target_y as i32).unsigned_abs();
     }
     distance
 }
@@ -60,7 +62,8 @@ pub fn euclidean_distance(board: &[Token], size: Size, target: &[Token]) -> u32 
                 target_y = f / size;
             }
         }
-        distance += ((x as i32 - target_x as i32).pow(2) + (y as i32 - target_y as i32).pow(2)).unsigned_abs();
+        distance += ((x as i32 - target_x as i32).pow(2) + (y as i32 - target_y as i32).pow(2))
+            .unsigned_abs();
     }
-	distance
+    distance
 }

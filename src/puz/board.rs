@@ -28,6 +28,6 @@ impl Board {
                 return i as Token;
             }
         }
-        return Token::MAX;
+        Token::MAX
     }
 }

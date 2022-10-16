@@ -2,7 +2,7 @@ use crate::color;
 use crate::err_no;
 use crate::puz::heuristic;
 use crate::puz::target_type;
-use crate::puz::{Puz, Size, Strategy, Token};
+use crate::puz::{Puz, Size, Strategy};
 use crate::usage;
 use crate::utils::ft_parse;
 use std::env::args;
@@ -48,7 +48,7 @@ pub fn parse() -> Result<Puz, bool> {
         };
     }
 
-    return Ok(p);
+    Ok(p)
 }
 
 fn parse_size(a: &str) -> Result<Puz, bool> {
@@ -59,39 +59,36 @@ fn parse_size(a: &str) -> Result<Puz, bool> {
         if !p.read(a, false) {
             return Err(false);
         }
-    } else {
-        let n = ft_parse::<Size>(a);
-        if n.is_ok() {
-            if n.unwrap() < 2 {
-                err_no!(
-                    "expected size >= {G}2{C}{B}, got {R}{s}",
-                    s = a,
-                    C = color::CLEAR,
-                    B = color::BOLD,
-                    R = color::RED,
-                    G = color::GRE
-                );
-                return Err(false);
-            }
-            p = Puz::from(n.unwrap());
-        } else {
-            Puz::new().read(a, false); // recall to get error message
+    } else if let Ok(n) = ft_parse::<Size>(a) {
+        if n < 2 {
             err_no!(
-                "\"{M}{a}{C}{B}\" is not a valid size or file",
-                a = a,
+                "expected size >= {G}2{C}{B}, got {R}{s}",
+                s = a,
                 C = color::CLEAR,
                 B = color::BOLD,
-                M = color::MAG
+                R = color::RED,
+                G = color::GRE
             );
-            usage::usage_initial_state();
             return Err(false);
         }
+        p = Puz::from(n);
+    } else {
+        Puz::new().read(a, false); // recall to get error message
+        err_no!(
+            "\"{M}{a}{C}{B}\" is not a valid size or file",
+            a = a,
+            C = color::CLEAR,
+            B = color::BOLD,
+            M = color::MAG
+        );
+        usage::usage_initial_state();
+        return Err(false);
     };
 
-    return Ok(p);
+    Ok(p)
 }
 
-fn parse_heuristic(a: &str) -> Result<fn(&[Token], Size, &[Token]) -> u32, bool> {
+fn parse_heuristic(a: &str) -> Result<heuristic::HeuristicFn, bool> {
     match a {
         "m" | "manhattan" => Ok(heuristic::manathan_distance),
         "e" | "euclidean" => Ok(heuristic::euclidean_distance),
@@ -105,7 +102,7 @@ fn parse_heuristic(a: &str) -> Result<fn(&[Token], Size, &[Token]) -> u32, bool>
                 M = color::MAG
             );
             usage::usage_heuristic();
-            return Err(false);
+            Err(false)
         }
     }
 }
@@ -124,7 +121,7 @@ fn parse_strategy(a: &str) -> Result<Strategy, bool> {
                 M = color::MAG
             );
             usage::usage_strategy();
-            return Err(false);
+            Err(false)
         }
     }
 }
@@ -143,11 +140,11 @@ fn parse_goal_state(a: &str, p: &mut Puz) -> bool {
                     M = color::MAG
                 );
                 usage::usage_goal_state();
-                false;
+                return false;
             }
         }
     }
-    return true;
+    true
 }
 
 fn parse_stop_at_first_solution(a: &str) -> Result<bool, bool> {
@@ -163,7 +160,7 @@ fn parse_stop_at_first_solution(a: &str) -> Result<bool, bool> {
                 M = color::MAG
             );
             usage::usage_stop_at_first_solution();
-            return Err(false);
+            Err(false)
         }
     }
 }

@@ -12,7 +12,7 @@ macro_rules! err_no {
 #[macro_export]
 macro_rules! err {
 	($($arg:tt)*) => {
-		crate::err_no!($($arg)*);
+		err_no!($($arg)*);
 		return false;
 	};
 }
